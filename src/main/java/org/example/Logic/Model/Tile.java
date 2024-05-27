@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Tile {
     private int x, y, radius;
@@ -214,5 +215,44 @@ public class Tile {
         int row = y - (x - (x & 1)) / 2;
         int z = -col - row;
         return new int[]{col, row, z};
+    }
+
+    public List<Tile> getAdjacentTiles(Board board) {
+        List<Tile> adjacentTiles = new ArrayList<>();
+        Tile[][] tiles = board.getTiles();
+
+        // Taille d'une tuile
+        int tileWidth = 2 * radius;
+        int tileHeight = (int) (Math.sqrt(3) * radius);
+
+        // Vérifier les tuiles adjacentes
+        int[][] directions = {
+                {tileWidth, 0}, {-tileWidth, 0}, // Droite, Gauche
+                {tileWidth / 2, tileHeight}, {-tileWidth / 2, tileHeight}, // Bas Droite, Bas Gauche
+                {tileWidth / 2, -tileHeight}, {-tileWidth / 2, -tileHeight} // Haut Droite, Haut Gauche
+        };
+
+        for (int[] dir : directions) {
+            int newX = x + dir[0];
+            int newY = y + dir[1];
+            Tile adjacentTile = getTileByCoordinates(tiles, newX, newY);
+            if (adjacentTile != null) {
+                adjacentTiles.add(adjacentTile);
+            }
+        }
+
+        return adjacentTiles;
+    }
+
+    private Tile getTileByCoordinates(Tile[][] tiles, int x, int y) {
+        for (int row = 0; row < tiles.length; row++) {
+            for (int col = 0; col < tiles[0].length; col++) {
+                Tile tile = tiles[row][col];
+                if (tile != null && tile.getX() == x && tile.getY() == y) {
+                    return tile;
+                }
+            }
+        }
+        return null;
     }
 }
