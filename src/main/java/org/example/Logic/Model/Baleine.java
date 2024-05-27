@@ -1,4 +1,4 @@
 package org.example.Logic.Model;
 
-public class Baleine extends Monster{
+public class Baleine extends Creature {
 }

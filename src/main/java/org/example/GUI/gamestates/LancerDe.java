@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -119,12 +120,17 @@ public class LancerDe extends State implements StateInterface {
     public void mouseClicked(MouseEvent e) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        if(!deLancee) {
-            if (mouseX >= Game.GAME_WIDTH - 100 && mouseX <= Game.GAME_WIDTH && mouseY >= 50 && mouseY <= 350) {
-                startDiceRollAnimation();
+
+        if(deLancee) {
+            if(game.getGameBoard().getBaleinesOnBoard().isEmpty() && currentDiceImage==dePhaseBaleine){
+                deLancee =false;
+                game.nextPlayerRound();
             }
-        }
-        else {
+            else if(game.getGameBoard().getRequinsOnBoard().isEmpty() && currentDiceImage==dePhaseRequin){
+                deLancee =false;
+
+                game.nextPlayerRound();
+            }
             for (Hexagon hex : hexagons) {
                 if (isPointInsideHexagon(mouseX, mouseY, hex)) {
                     handleMonsterClick(hex);
@@ -156,8 +162,7 @@ public class LancerDe extends State implements StateInterface {
         } else {
             hex.setSerpent(serpentSelected);
             serpentSelected = null;
-           //ptrre à changer
-            game.nextTurn();
+            game.nextPlayerRound();
         }
     }
 
@@ -170,7 +175,7 @@ public class LancerDe extends State implements StateInterface {
         } else {
             hex.setRequin(requinSelected);
             requinSelected = null;
-            game.nextTurn();
+            game.nextPlayerRound();
         }
     }
 
@@ -183,7 +188,7 @@ public class LancerDe extends State implements StateInterface {
         } else {
             hex.setBaleine(baleineSelected);
             baleineSelected = null;
-            game.nextTurn();
+            game.nextPlayerRound();
         }
     }
 
@@ -194,7 +199,6 @@ public class LancerDe extends State implements StateInterface {
         startTime = System.currentTimeMillis();
         diceRollTimer.start();
         deLancee = true;
-
     }
 
     @Override
@@ -211,6 +215,11 @@ public class LancerDe extends State implements StateInterface {
     public void setRectPos(int x, int y) {
         this.xDelta = x;
         this.yDelta = y;
+    }
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER && !deLancee) {
+                startDiceRollAnimation();
+        }
     }
 
     public List<Hexagon> getHexagons() {

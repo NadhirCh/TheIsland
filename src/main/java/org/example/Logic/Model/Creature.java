@@ -1,4 +1,4 @@
 package org.example.Logic.Model;
 
-public class Monster {
+public class Creature {
 }

@@ -1,28 +1,37 @@
 package org.example.Logic.Model;
 
-import org.example.GUI.gamestates.Color;
+import org.example.GUI.gamestates.Couleur;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
     private String name;
     private int[] pawnsCollection;
+    private List<Tuile> handTiles;
+    private List<Pion> explorers;
 
-    private Color color;
 
-    public Player(String name, int[] pawnsCollection,Color color) {
+    private Couleur couleur;
+
+    public Player(String name, int[] pawnsCollection, Couleur couleur) {
         this.name = name;
         this.pawnsCollection = pawnsCollection.clone();
-        this.color = color;
+        this.couleur = couleur;
+        this.handTiles = new ArrayList<>();
+        this.explorers = new ArrayList<>();
+
     }
 
     public String getName() {
         return name;
     }
 
-    public Color getColor(){
-        return this.color;
+    public Couleur getColor(){
+        return this.couleur;
     }
-    public void setColor(Color color){
-        this.color = color;
+    public void setColor(Couleur couleur){
+        this.couleur = couleur;
     }
     public int[] getPawnsCollection() {
         return pawnsCollection;
@@ -41,4 +50,5 @@ public class Player {
             return 0;
         }
     }
+
 }

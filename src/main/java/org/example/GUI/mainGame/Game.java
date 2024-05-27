@@ -1,12 +1,13 @@
 package org.example.GUI.mainGame;
 
 import org.example.GUI.gamestates.*;
+import org.example.Logic.Model.Board;
 import org.example.Logic.Model.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-import static org.example.GUI.gamestates.Color.*;
+import static org.example.GUI.gamestates.Couleur.*;
 
 public class Game implements Runnable {
 
@@ -18,13 +19,14 @@ public class Game implements Runnable {
     public static final int GAME_WIDTH = 1200;
     public  static final int GAME_HEIGHT = 800;
     public  static final int PLAYER_COUNT = 0;
-    private Playing playing;
+    private Board gameBoard;
     private PionSelection pionSelection;
     private BateauSelection bateauSelection;
+    private RetirerTuile retirerTuile;
     private LancerDe lancerDe;
     private ArrayList<Player> players;
     private int currentPlayerIndex;
-    private MoveElement moveElement;
+    private DeplacerElement deplacerElement;
 
 
 
@@ -37,11 +39,13 @@ public class Game implements Runnable {
         startGameLoop();
     }
     private void initClasses() {
+        gameBoard = new Board();
         pionSelection = new PionSelection(this);
+        pionSelection.setHexagons(gameBoard.getHexagons());
         bateauSelection = new BateauSelection(this);
+        retirerTuile = new RetirerTuile(this);
         lancerDe = new LancerDe(this);
-        playing = new Playing(this);
-        moveElement = new MoveElement(this);
+        deplacerElement = new DeplacerElement(this);
         players = new ArrayList<>(4);
             Player P1 = new Player("¨Player1",new int[]{3, 2, 2, 1, 1, 1},ROUGE);
             Player P2 = new Player("Player2",new int[]{3, 2, 2, 1, 1, 1},BLEU);
@@ -61,7 +65,7 @@ public class Game implements Runnable {
     public void startGame(){
         GameState.state = GameState.PLAYING;
         System.out.println("Game Started !!");
-        moveElement.setHexagons(bateauSelection.getHexagons());
+        deplacerElement.setHexagons(bateauSelection.getHexagons());
     }
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
@@ -69,6 +73,10 @@ public class Game implements Runnable {
 
     public void nextPlayerRound() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
+    }
+    public Board getGameBoard(){
+        return this.gameBoard;
     }
 
 
@@ -78,17 +86,22 @@ public class Game implements Runnable {
             case JOUER_TUILE :
                 break;
             case DEPLACER_ELEMENT:
-                lancerDe.setHexagons(moveElement.getHexagons());
-                CurrentTurn.currentTurn = CurrentTurn.LANCER_DE;
+                retirerTuile.setHexagons(deplacerElement.getHexagons());
+                CurrentTurn.currentTurn = CurrentTurn.RETIRER_TUILE;
                 break;
             case RETIRER_TUILE:
+                lancerDe.setHexagons(retirerTuile.getHexagons());
+                CurrentTurn.currentTurn=CurrentTurn.LANCER_DE;
                 break;
             case LANCER_DE:
-                moveElement.setHexagons(lancerDe.getHexagons());
+                deplacerElement.setHexagons(lancerDe.getHexagons());
                 CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
                 break;
 
         }
+    }
+    public RetirerTuile getRetirerTuile(){
+        return this.retirerTuile;
     }
     public GameState getCurrentState() {
         return GameState.state;
@@ -98,8 +111,8 @@ public class Game implements Runnable {
        GameState.state  = currentState;
     }
 
-    public MoveElement getMoveElement(){
-        return this.moveElement;
+    public DeplacerElement getMoveElement(){
+        return this.deplacerElement;
     }
 
     public void render(Graphics g) {
@@ -107,10 +120,13 @@ public class Game implements Runnable {
             case PLAYING :
                 switch (CurrentTurn.currentTurn){
                     case DEPLACER_ELEMENT :
-                        moveElement.draw(g);
+                        deplacerElement.draw(g);
                         break;
                     case LANCER_DE:
                         lancerDe.draw(g);
+                        break;
+                    case RETIRER_TUILE:
+                        retirerTuile.draw(g);
                         break;
                 }
                 break;
@@ -139,7 +155,19 @@ public class Game implements Runnable {
     public void update() {
         switch (GameState.state){
             case PLAYING :
-                playing.update();
+            switch (CurrentTurn.currentTurn){
+                case DEPLACER_ELEMENT :
+                    deplacerElement.update();
+                    break;
+                case LANCER_DE:
+                    lancerDe.update();
+                    break;
+                case RETIRER_TUILE:
+                    retirerTuile.update();
+                    break;
+                case JOUER_TUILE:
+                    break;
+            }
             case MENU:
                 break;
             case PIONS_SELECTION:

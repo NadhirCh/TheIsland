@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.awt.geom.Point2D.distance;
+import static org.example.GUI.mainGame.Hexagon.Type.NONE;
 
 public class BateauSelection extends State implements StateInterface {
     private BufferedImage backgroundImage;
@@ -89,7 +90,7 @@ public class BateauSelection extends State implements StateInterface {
         int mouseY = e.getY();
 
         for (Hexagon hex : hexagons) {
-            if (isPointInsideHexagon(mouseX, mouseY, hex) && !bateauPlaced) {
+            if (isPointInsideHexagon(mouseX, mouseY, hex) && !bateauPlaced && hex.getType()==NONE) {
                 if (currentBateauCount < MAX_BATEAUX) {
                     if (handleHexagonClick(hex) != 0) {
                         game.nextPlayerRound();
@@ -110,7 +111,7 @@ public class BateauSelection extends State implements StateInterface {
 
     private int handleHexagonClick(Hexagon hex) {
         if (hex.getBateau() == null) {
-            hex.setBateau(new Bateau(game.getCurrentPlayer().getColor()));
+            hex.setBateau(new Bateau());
             bateauPlaced = true;
             currentBateauCount++;
             return 1;

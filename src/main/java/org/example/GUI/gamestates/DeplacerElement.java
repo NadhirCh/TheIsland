@@ -11,11 +11,12 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.geom.Point2D.distance;
 
-public class MoveElement extends State implements StateInterface {
+public class DeplacerElement extends State implements StateInterface {
     private final int MAX_MOVES = 3;
     private int moveCount = 0;
     private BufferedImage backgroundImage;
@@ -25,6 +26,7 @@ public class MoveElement extends State implements StateInterface {
     private BufferedImage pionJauneImage;
 
     private BufferedImage bateauImage;
+    private List<Hexagon> adjascentHexagons;
     private List<Hexagon> hexagons;
     private final int radius = 40;
     private final int rows = 13;
@@ -35,14 +37,16 @@ public class MoveElement extends State implements StateInterface {
     private Bateau bateauSelected = null;
 
     private boolean gridGenerated = false;
+    private List<Pion> pionsMoved;
 
 
 
-    public MoveElement(Game game) {
+    public DeplacerElement(Game game) {
         super(game);
+        adjascentHexagons = new ArrayList<Hexagon>();
         initClasses();
         loadImages();
-        System.out.println("Succesfuly init Playing Game");
+        pionsMoved = new ArrayList<Pion>();
     }
 
     public void setHexagons(List<Hexagon>hexagons){
@@ -106,6 +110,7 @@ public class MoveElement extends State implements StateInterface {
         }
     }
 
+
     @Override
     public void mouseClicked(MouseEvent e) {
         int mouseX = e.getX();
@@ -129,44 +134,87 @@ public class MoveElement extends State implements StateInterface {
         return dist < radius;
     }
 
-    /// SHOULD CHANGE THIS LATER
     private void handleHexagonLeftClick(Hexagon hex) {
+
+        // Partie sélection du pion
         if(pionSelected == null) {
             for (Pion pion : hex.getListPion()) {
-                if (pion.getColor() == game.getCurrentPlayer().getColor()) {
+                if (pion.getColor() == game.getCurrentPlayer().getColor() && pion.deplacer()) {
                     pionSelected = pion;
+                    pionsMoved.add(pion);
                     hex.getListPion().remove(pion);
+                    adjascentHexagons = hex.getAdjacentHexagons(hexagons);
                     break;
                 }
             }
         }
-        else{
-                hex.addPawnToHexagon(pionSelected);
-                pionSelected = null;
-                moveCount++;
-                if(moveCount == MAX_MOVES){
+        // Partie mis en place des pions
+        else {
+            if (adjascentHexagons.contains(hex)) {
+                // déplacement d'un pion vers un bateau
+                if (hex.getBateau() != null) {
+                    if (hex.getBateau().addExplorer(pionSelected)) {
+                        pionSelected.quitIsland();
+                        pionSelected = null;
+                        adjascentHexagons.clear();
+                        moveCount++;
+                        if (moveCount == MAX_MOVES) {
+                            game.nextTurn();
+                            moveCount = 0;
+                            for(Pion pion : pionsMoved){
+                                pion.setMoveCounter(0);
+                            }
+                            pionsMoved.clear();
+                        }
+                    }
+                    ;
+                } else if(hex.getType()!= Hexagon.Type.NONE && !pionSelected.isNageur())
+                {
+                    // déplacement d'un pion vers une case normale
+                    hex.addPawnToHexagon(pionSelected);
+                    if(hex.getType()== Hexagon.Type.NONE){
+                        pionSelected.quitIsland();
+                        pionSelected.setNageur(true);
+                    }
+                    pionSelected = null;
+                    adjascentHexagons.clear();
+                    moveCount++;
+                    if (moveCount == MAX_MOVES) {
                         game.nextTurn();
+                        for(Pion pion : pionsMoved){
+                            pion.setMoveCounter(0);
+                        }
+                        pionsMoved.clear();
                         moveCount = 0;
+                    }
                 }
-
-                }
+            }
+        }
         }
 
 
     private void handleHexagonRightClick(Hexagon hex) {
         if(bateauSelected == null ){
             if(hex.getBateau()!=null) {
-                bateauSelected = hex.getBateau();
-                hex.setBateau(null);
+                if (hex.getBateau().getControlleurBateau().contains(game.getCurrentPlayer().getColor())){
+                    bateauSelected = hex.getBateau();
+                    hex.setBateau(null);
+                }
             }
         }
-        else{
-            hex.setBateau(bateauSelected);
-            bateauSelected = null;
-            moveCount++;
-            if(moveCount == MAX_MOVES){
-                game.nextTurn();
-                moveCount = 0;
+        else {
+            if (hex.getBateau() == null) {
+                hex.setBateau(bateauSelected);
+                bateauSelected = null;
+                moveCount++;
+                if (moveCount == MAX_MOVES) {
+                    game.nextTurn();
+                    for(Pion pion : pionsMoved){
+                        pion.setMoveCounter(0);
+                    }
+                    pionsMoved.clear();
+                    moveCount = 0;
+                }
             }
         }
     }

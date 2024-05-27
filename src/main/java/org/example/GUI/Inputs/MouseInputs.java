@@ -60,6 +60,8 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
                     case LANCER_DE:
                         gamePanel.getGame().getLancerDe().mouseClicked(e);
                         break;
+                    case RETIRER_TUILE:
+                        gamePanel.getGame().getRetirerTuile().mouseClicked(e);
                 }
             case BATEAU_SELECTION:
                 gamePanel.getGame().getBateauSelection().mouseClicked(e);
