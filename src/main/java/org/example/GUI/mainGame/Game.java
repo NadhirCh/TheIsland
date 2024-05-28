@@ -2,6 +2,7 @@ package org.example.GUI.mainGame;
 
 import org.example.Logic.Model.Player;
 import org.example.GUI.gamestates.GameState;
+import org.example.GUI.gamestates.Menue;
 import org.example.GUI.gamestates.PionSelection;
 import org.example.GUI.gamestates.Playing;
 
@@ -19,7 +20,13 @@ public class Game implements Runnable {
     private final int UPS_SET = 200;
     public static final int GAME_WIDTH = 1200;
     public  static final int GAME_HEIGHT = 800;
+
+
+
     private Playing playing;
+    private Menue Menue;
+   
+
     private PionSelection pionSelection;
     private ArrayList<Player> players;
     private int currentPlayerIndex;
@@ -36,6 +43,8 @@ public class Game implements Runnable {
     private void initClasses() {
         pionSelection = new PionSelection(this);
         playing = new Playing(this);
+        Menue = new Menue(this);
+       
 
         players = new ArrayList<>(4);
             Player P1 = new Player("Jhon",new int[]{3, 2, 2, 1, 1, 1},ROUGE);
@@ -47,13 +56,15 @@ public class Game implements Runnable {
         players.add(P3);
         players.add(P4);
 
-        GameState.state = GameState.PIONS_SELECTION;
+        GameState.state = GameState.MENU;
     }
 
     public void startGame(){
-        GameState.state = GameState.PLAYING;
+        GameState.state = GameState.MENU;
         System.out.println("Game Started !!");
         playing.setHexagons(pionSelection.getHexagons());
+        Menue = new Menue(this);
+		playing = new Playing(this);
     }
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
@@ -72,13 +83,16 @@ public class Game implements Runnable {
 
     public void render(Graphics g) {
         switch (GameState.state) {
-            case PLAYING :
-                playing.draw(g);
-                break;
             case MENU:
-                break;
+			Menue.draw(g);
+			break;
+		case PLAYING:
+			playing.draw(g);
+			break;
             case PIONS_SELECTION:
                 pionSelection.draw(g);
+                break;
+                default:
                 break;
         }
     }
@@ -89,14 +103,21 @@ public class Game implements Runnable {
 
     public void update() {
         switch (GameState.state){
+            case MENU:
+            Menue.update();
+                break;
             case PLAYING :
                 playing.update();
-            case MENU:
-                break;
+           break;
             case PIONS_SELECTION:
                 pionSelection.update();
-
                 break;
+                case OPTIONS:
+		case QUIT:
+		default:
+			System.exit(0);
+			break;
+
         }
     }
     public PionSelection getPionSelection() {
@@ -146,6 +167,21 @@ public class Game implements Runnable {
             }
         }
 
+    }
+
+
+
+    public Playing getPlaying() {
+        return playing;
+    }
+    public void setPlaying(Playing playing) {
+        this.playing = playing;
+    }
+    public Menue getMenue() {
+        return Menue;
+    }
+    public void setMenue(Menue menue) {
+        Menue = menue;
     }
 
 }

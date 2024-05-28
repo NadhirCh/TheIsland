@@ -116,13 +116,13 @@ public class Playing extends State implements StateInterface {
         if (backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
         }
-
+    
         Graphics2D g2d = (Graphics2D) g;
-        for (Hexagon hex : hexagons) {
-            hex.draw(g2d);
+        if (hexagons != null) {
+            for (Hexagon hex : hexagons) {
+                hex.draw(g2d);
+            }
         }
-
-
     }
 
 
@@ -130,11 +130,13 @@ public class Playing extends State implements StateInterface {
     public void mouseClicked(MouseEvent e) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-
-        for (Hexagon hex : hexagons) {
-            if (isPointInsideHexagon(mouseX, mouseY, hex) ) {
-                handleHexagonClick(hex);
-                break;
+    
+        if (hexagons != null) {
+            for (Hexagon hex : hexagons) {
+                if (isPointInsideHexagon(mouseX, mouseY, hex)) {
+                    handleHexagonClick(hex);
+                    break;
+                }
             }
         }
     }
