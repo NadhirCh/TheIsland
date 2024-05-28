@@ -88,6 +88,7 @@ public class Board {
         }
     }
 
+
     private int getCurrentCols(int row) {
         if (row == 0 || row == rows - 1) {
             return 7;
@@ -166,6 +167,11 @@ public class Board {
     }
 
 
+    public void removeBaleine(Baleine baleine) {
+        baleinesOnBoard.remove(baleine);
+    }
 
-
+    public void removeRequin(Requin requin) {
+        requinsOnBoard.remove(requin);
+    }
 }

@@ -14,13 +14,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.geom.Point2D.distance;
 
 public class LancerDe extends State implements StateInterface {
-    private final int MAX_MOVES = 3;
-    private int moveCount = 0;
+    private  List<Pion>[] islands;
     private BufferedImage backgroundImage;
     private BufferedImage dePhaseSerpent;
     private BufferedImage dePhaseBaleine;
@@ -37,18 +37,24 @@ public class LancerDe extends State implements StateInterface {
 
     private List<Hexagon> hexagons;
     private final int radius = 40;
-    private final int rows = 13;
-    private final int cols = 7;
+
     private float xDelta = 100, yDelta = 100;
 
-    private boolean gridGenerated = false;
     private boolean deLancee = false;
+    private List<Hexagon> adjascentHexagons;
+    private BufferedImage baleineImage;
+    private BufferedImage requinImage;
+    private BufferedImage serpentImage;
 
     public LancerDe(Game game) {
         super(game);
         initClasses();
         loadImages();
         initTimer();
+        adjascentHexagons = new ArrayList<Hexagon>();
+    }
+    public void setIslands(List<Pion>[] islands){
+        this.islands = islands;
     }
 
     public void setHexagons(List<Hexagon> hexagons) {
@@ -57,6 +63,9 @@ public class LancerDe extends State implements StateInterface {
 
     @Override
     public void update() {
+        for(Hexagon hex : hexagons){
+            hex.update();
+        }
     }
 
     private void initClasses() {
@@ -68,6 +77,10 @@ public class LancerDe extends State implements StateInterface {
             dePhaseBaleine = ImageIO.read(getClass().getResource("/dee_PhaseBaleine.png"));
             dePhaseRequin = ImageIO.read(getClass().getResource("/dee_PhaseRequin.png"));
             dePhaseSerpent = ImageIO.read(getClass().getResource("/dee_PhaseSerpent.png"));
+            requinImage = ImageIO.read(getClass().getResource("/jeton_requin.png"));
+            baleineImage = ImageIO.read(getClass().getResource("/jeton_baleine.png"));
+            serpentImage = ImageIO.read(getClass().getResource("/jeton_serpent.png"));
+
 
             diceImages = new BufferedImage[]{
                     dePhaseBaleine,
@@ -110,11 +123,21 @@ public class LancerDe extends State implements StateInterface {
             hex.draw(g2d);
         }
         drawDe(g);
+        if (requinSelected != null) {
+            g.drawImage(requinImage, (int) xDelta, (int) yDelta, requinImage.getWidth()/2, requinImage.getHeight()/2, null);
+        }
+        else if (baleineSelected !=null){
+            g.drawImage(baleineImage, (int) xDelta, (int) yDelta, baleineImage.getWidth()/2, baleineImage.getHeight()/2, null);
+        }
+        else if(serpentSelected != null){
+            g.drawImage(serpentImage,(int) xDelta,(int) yDelta,serpentImage.getWidth()/2,serpentImage.getHeight()/2,null);
+        }
+
 
     }
 
     public void drawDe(Graphics g) {
-        g.drawImage(currentDiceImage, Game.GAME_WIDTH - 100, 100,50,50, null);
+        g.drawImage(currentDiceImage, Game.GAME_WIDTH - 100, 100,80,80, null);
     }
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -123,17 +146,18 @@ public class LancerDe extends State implements StateInterface {
 
         if(deLancee) {
             if(game.getGameBoard().getBaleinesOnBoard().isEmpty() && currentDiceImage==dePhaseBaleine){
-                deLancee =false;
+                resetTurnState();
                 game.nextPlayerRound();
             }
             else if(game.getGameBoard().getRequinsOnBoard().isEmpty() && currentDiceImage==dePhaseRequin){
-                deLancee =false;
-
+                resetTurnState();
                 game.nextPlayerRound();
             }
-            for (Hexagon hex : hexagons) {
-                if (isPointInsideHexagon(mouseX, mouseY, hex)) {
-                    handleMonsterClick(hex);
+            else {
+                for (Hexagon hex : hexagons) {
+                    if (isPointInsideHexagon(mouseX, mouseY, hex)) {
+                        handleMonsterClick(hex);
+                    }
                 }
             }
         }
@@ -158,11 +182,14 @@ public class LancerDe extends State implements StateInterface {
             if (hex.getSerpent() != null) {
                 serpentSelected = hex.getSerpent();
                 hex.setSerpent(null);
+                adjascentHexagons = hex.getAdjacentHexagons(hexagons);
             }
         } else {
-            hex.setSerpent(serpentSelected);
-            serpentSelected = null;
-            game.nextPlayerRound();
+            if(adjascentHexagons.contains(hex)) {
+                hex.setSerpent(serpentSelected);
+                resetTurnState();
+                game.nextPlayerRound();
+            }
         }
     }
 
@@ -170,25 +197,32 @@ public class LancerDe extends State implements StateInterface {
         if (requinSelected == null) {
             if (hex.getRequin() != null) {
                 requinSelected = hex.getRequin();
+                adjascentHexagons = hex.getAdjacentHexagons(hexagons);
                 hex.setRequin(null);
             }
         } else {
-            hex.setRequin(requinSelected);
-            requinSelected = null;
-            game.nextPlayerRound();
+            if(adjascentHexagons.contains(hex)) {
+                hex.setRequin(requinSelected);
+                resetTurnState();
+
+                game.nextPlayerRound();
+            }
         }
     }
 
     private void handleBaleineClick(Hexagon hex) {
         if (baleineSelected == null) {
             if (hex.getBaleine() != null) {
+                adjascentHexagons = hex.getAdjacentHexagons(hexagons);
                 baleineSelected = hex.getBaleine();
                 hex.setBaleine(null);
             }
         } else {
-            hex.setBaleine(baleineSelected);
-            baleineSelected = null;
-            game.nextPlayerRound();
+            if(adjascentHexagons.contains(hex)) {
+                hex.setBaleine(baleineSelected);
+                resetTurnState();
+                game.nextPlayerRound();
+            }
         }
     }
 
@@ -198,14 +232,23 @@ public class LancerDe extends State implements StateInterface {
         diceRollDuration = 3000 + (int) (Math.random() * 2000);
         startTime = System.currentTimeMillis();
         diceRollTimer.start();
-        deLancee = true;
     }
+    private void resetTurnState() {
+        serpentSelected = null;
+        baleineSelected = null;
+        requinSelected = null;
+        deLancee = false;
+        adjascentHexagons.clear();
+        currentDiceImage = diceImages[0];
+    }
+
 
     @Override
     public void mousePressed(MouseEvent e) {
     }
 
     public void mouseMoved(MouseEvent e) {
+        this.setRectPos(e.getX(), e.getY());
     }
 
     @Override
@@ -222,7 +265,9 @@ public class LancerDe extends State implements StateInterface {
         }
     }
 
+
     public List<Hexagon> getHexagons() {
     return this.hexagons;
     }
+
 }

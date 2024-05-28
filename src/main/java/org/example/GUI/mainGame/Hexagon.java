@@ -42,6 +42,7 @@ public class Hexagon {
     return radius;
     }
 
+
     public enum Type {
         LAND, FOREST, MOUNTAIN, NONE
     }
@@ -76,10 +77,69 @@ public class Hexagon {
     public Type getType() {
         return this.type;
     }
-    private void setType(Type type){
+    public void setType(Type type){
         this.type = type;
     }
 
+    public void update(){
+        if(this.serpent != null){
+            this.bateau = null;
+            pions.clear();
+        }
+        if(this.baleine !=null)
+        {
+            if(bateau != null) {
+                for (Pion pion : pions) {
+                    bateau.removeExplorer(pion);
+                    pion.setNageur(true);
+                }
+            this.bateau = null;
+            }
+        }
+        if(this.requin !=null){
+            pions.clear();
+        }
+        if((row == 1 && col == 0)||(col == 0 && row == 2)){
+            for(Pion pion : pions){
+                pion.setCanExit(3);
+            }
+            if(bateau!=null){
+                for(Pion pion : bateau.getExplorers()){
+                    pion.setCanExit(3);
+                }
+            }
+        }
+        else if((row == 1 && col == 9)||(col == 10 && row == 2)){
+            for(Pion pion : pions){
+                pion.setCanExit(2);
+            }
+            if(bateau!=null){
+                for(Pion pion : bateau.getExplorers()){
+                    pion.setCanExit(2);
+                }
+            }
+        }
+        else if((row == 11 && col == 9)||(col == 10 && row == 10)){
+            for(Pion pion : pions){
+                pion.setCanExit(1);
+            }
+            if(bateau!=null){
+                for(Pion pion : bateau.getExplorers()){
+                    pion.setCanExit(1);
+                }
+            }
+        }
+        else if((row == 10 && col == 0)||(col == 0 && row == 11)){
+            for(Pion pion : pions){
+                pion.setCanExit(0);
+            }
+            if(bateau!=null){
+                for(Pion pion : bateau.getExplorers()){
+                    pion.setCanExit(0);
+                }
+            }
+        }
+    }
     public List<Hexagon> getAdjacentHexagons( List<Hexagon> hexagons) {
         List<Hexagon> adjacentHexagons = new ArrayList<>();
         int circle_radius = 69;

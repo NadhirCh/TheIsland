@@ -78,9 +78,9 @@ public class BateauSelection extends State implements StateInterface {
     private void drawCenteredString(Graphics g, String text, Rectangle rect, Font font) {
         FontMetrics metrics = g.getFontMetrics(font);
         int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        int y = 40;
         g.setFont(font);
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.drawString(text, x, y);
     }
 

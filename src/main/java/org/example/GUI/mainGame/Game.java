@@ -1,11 +1,18 @@
 package org.example.GUI.mainGame;
 
 import org.example.GUI.gamestates.*;
+import org.example.GUI.gamestates.Menu;
 import org.example.Logic.Model.Board;
+import org.example.Logic.Model.Pion;
 import org.example.Logic.Model.Player;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.example.GUI.gamestates.Couleur.*;
 
@@ -27,11 +34,24 @@ public class Game implements Runnable {
     private ArrayList<Player> players;
     private int currentPlayerIndex;
     private DeplacerElement deplacerElement;
+    private BufferedImage pionRougeImage;
+    private BufferedImage pionBleuImage;
+    private BufferedImage pionJauneImage;
+    private BufferedImage pionVertImage;
 
+
+    // island 0 => bottom left / island 1 => bottom right / island 2 => top right / island 3 => top left
+    private List<Pion>[] islands = new ArrayList[4];
+
+    private boolean gameEnded;
+    private Menu menu;
 
 
     public Game() {
         initClasses();
+        for (int i = 0; i < islands.length; i++) {
+            islands[i] = new ArrayList<>();
+        }
         gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
         gamePanel.setFocusable(true);
@@ -42,10 +62,12 @@ public class Game implements Runnable {
         gameBoard = new Board();
         pionSelection = new PionSelection(this);
         pionSelection.setHexagons(gameBoard.getHexagons());
+        menu = new Menu(this);
         bateauSelection = new BateauSelection(this);
         retirerTuile = new RetirerTuile(this);
         lancerDe = new LancerDe(this);
         deplacerElement = new DeplacerElement(this);
+        deplacerElement.setIslands(islands);
         players = new ArrayList<>(4);
             Player P1 = new Player("¨Player1",new int[]{3, 2, 2, 1, 1, 1},ROUGE);
             Player P2 = new Player("Player2",new int[]{3, 2, 2, 1, 1, 1},BLEU);
@@ -55,8 +77,17 @@ public class Game implements Runnable {
         players.add(P2);
         players.add(P3);
         players.add(P4);
+        try {
+            pionBleuImage = ImageIO.read(getClass().getResource("/pion_bleu.png"));
+            pionRougeImage = ImageIO.read(getClass().getResource("/pion_rouge.png"));
+            pionVertImage = ImageIO.read(getClass().getResource("/pion_vert.png"));
+            pionJauneImage = ImageIO.read(getClass().getResource("/pion_jaune.png"));
 
-        GameState.state = GameState.PIONS_SELECTION;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        GameState.state = GameState.PLAYING;
     }
     public void startBateauSelection(){
         bateauSelection.setHexagons(pionSelection.getHexagons());
@@ -86,14 +117,18 @@ public class Game implements Runnable {
             case JOUER_TUILE :
                 break;
             case DEPLACER_ELEMENT:
+                retirerTuile.setIslands(islands);
                 retirerTuile.setHexagons(deplacerElement.getHexagons());
+                retirerTuile.update();
                 CurrentTurn.currentTurn = CurrentTurn.RETIRER_TUILE;
                 break;
             case RETIRER_TUILE:
+                lancerDe.setIslands(islands);
                 lancerDe.setHexagons(retirerTuile.getHexagons());
                 CurrentTurn.currentTurn=CurrentTurn.LANCER_DE;
                 break;
             case LANCER_DE:
+                deplacerElement.setIslands(islands);
                 deplacerElement.setHexagons(lancerDe.getHexagons());
                 CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
                 break;
@@ -114,6 +149,48 @@ public class Game implements Runnable {
     public DeplacerElement getMoveElement(){
         return this.deplacerElement;
     }
+    private void drawPawnsArrived(Graphics g) {
+        int numPions;
+        for (int j = 0; j < islands.length; j++) {
+            numPions = islands[j].size();
+            double angleStep = 2 * Math.PI / numPions;
+            int circleRadius = 40 / 3;
+
+            for (int i = 0; i < numPions; i++) {
+                Pion pion = islands[j].get(i);
+                BufferedImage pionImage = getPionImageByType(pion);
+                if (pionImage != null) {
+                    int imageWidth = pionImage.getWidth() / 4;
+                    int imageHeight = pionImage.getHeight() / 4;
+                    int x = (j == 3 || j == 0) ? 50 : 1500;
+                    int y = (j == 3 || j == 2) ? 50 : 1000;
+
+
+                    double angle = i * angleStep;
+                    int drawX = (int) (x + circleRadius * Math.cos(angle) - imageWidth / 2);
+                    int drawY = (int) (y + circleRadius * Math.sin(angle) - imageHeight / 2);
+
+                    g.drawImage(pionImage, drawX, drawY, imageWidth, imageHeight, null);
+                }
+            }
+        }
+    }
+
+    public BufferedImage getPionImageByType(Pion pion) {
+        switch (pion.getColor()) {
+            case ROUGE:
+                return pionRougeImage;
+            case BLEU:
+                return pionBleuImage;
+            case JAUNE:
+                return pionJauneImage;
+            case VERT:
+                return pionVertImage;
+            default:
+                return null;
+        }
+    }
+
 
     public void render(Graphics g) {
         switch (GameState.state) {
@@ -129,8 +206,10 @@ public class Game implements Runnable {
                         retirerTuile.draw(g);
                         break;
                 }
+                drawPawnsArrived(g);
                 break;
             case MENU:
+                menu.draw(g);
                 break;
             case PIONS_SELECTION:
                 pionSelection.draw(g);
@@ -169,6 +248,7 @@ public class Game implements Runnable {
                     break;
             }
             case MENU:
+                menu.update();
                 break;
             case PIONS_SELECTION:
                 pionSelection.update();
@@ -230,4 +310,15 @@ public class Game implements Runnable {
     }
 
 
+    public void setEndGame(boolean gameEnded) {
+        this.gameEnded = true;
+    }
+
+    public List<Pion>[] getIslands() {
+        return this.islands;
+    }
+
+    public Menu getMenu() {
+        return this.menu;
+    }
 }

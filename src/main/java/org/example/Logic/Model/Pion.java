@@ -9,6 +9,7 @@ public class Pion {
     private int y;
     private boolean nageur;
     private boolean onIsland;
+    private int canExist= -1;
     private int moveCounter ;
     public Pion(Couleur couleur, int points) {
         this.couleur = couleur;
@@ -16,6 +17,13 @@ public class Pion {
         this.nageur = false; // Un pion n'est pas nageur par défaut
         this.onIsland = true;
         this.moveCounter = 0;
+    }
+    public void setCanExit(int canExist){
+        this.canExist=canExist;
+    }
+
+    public int canExit() {
+        return canExist;
     }
 
     public boolean deplacer(){
@@ -27,6 +35,10 @@ public class Pion {
         }
         moveCounter++;
         return true;
+    }
+
+    public boolean isOnIsland(){
+        return onIsland;
     }
     public void setMoveCounter(int counter){
         this.moveCounter = counter;

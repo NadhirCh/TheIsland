@@ -22,6 +22,11 @@ public class Bateau {
         }
         return false;
     }
+
+    public List<Pion> getExplorers() {
+        return explorers;
+    }
+
     public void removeExplorer(Pion pion){
         explorers.remove(pion);
     }

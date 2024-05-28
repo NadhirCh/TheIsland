@@ -4,6 +4,7 @@ import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
 import org.example.GUI.ui.TuileEffectOverlay;
 import org.example.Logic.Model.Pion;
+import org.example.Logic.Model.Tuile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,11 +12,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.geom.Point2D.distance;
 
 public class RetirerTuile extends State implements StateInterface {
+    private  List<Pion>[] islands;
     private BufferedImage backgroundImage;
     private BufferedImage pionRougeImage;
     private BufferedImage pionBleuImage;
@@ -23,16 +27,29 @@ public class RetirerTuile extends State implements StateInterface {
     private BufferedImage pionJauneImage;
 
     private List<Hexagon> hexagons;
+
     private final int radius = 40;
     private final int rows = 13;
     private final int cols = 7;
     private float xDelta = 100, yDelta = 100;
     private boolean gridGenerated = false;
 
+    private final int TOTAL_TUILE_PLAGE = 16;
+    private final int TOTAL_TUILE_FORET = 12;
+    private final int TOTAL_TUILE_MONTAGNE = 12;
+    private int currentTuilePlageCounter = 16;
+    private int currentTuileForetCounter = 12;
+    private int currentTuileMontagneCounter = 12;
+
+
     private boolean tuileSelected =false;
     private Hexagon selectedHex;
 
     private TuileEffectOverlay tuileEffectOverlay;
+    private List<Hexagon> listPlageAdjascentToWater;
+    private List<Hexagon> listForetAdjascentToWater;
+    private List<Hexagon> listMontagneAdjascentToWater;
+
 
 
     public Hexagon getSelectedHex() {
@@ -51,55 +68,63 @@ public class RetirerTuile extends State implements StateInterface {
         this.tuileSelected = tuileSelected;
     }
 
+    public void updateTuilesPlageAdjascentToWater(){
+        for(Hexagon hex : hexagons){
+            if(isAdjacentToWater(hex)){
+                switch (hex.getType()){
+                    case LAND :
+                        if(hex.getRow()==6 && hex.getCol()==5){
+                            break;
+                        }
+                        else if(!listPlageAdjascentToWater.contains(hex)){
+                        listPlageAdjascentToWater.add(hex);}
+                        break;
+                    case  FOREST:
+                        if(hex.getRow()==6 && hex.getCol()==5){
+                            break;
+                        }
+                        else if(!listForetAdjascentToWater.contains(hex))
+                        {listForetAdjascentToWater.add(hex);}
+                        break;
+                    case MOUNTAIN:
+                        if(hex.getRow()==6 && hex.getCol()==5){
+                            break;
+                        }
+                        else if(!listMontagneAdjascentToWater.contains(hex)){
+                            listMontagneAdjascentToWater.add(hex);
+                        }
+                        break;
+                }
+            }
 
+        }
+    }
 
 
     public RetirerTuile(Game game)  {
         super(game);
         initClasses();
+        listForetAdjascentToWater = new ArrayList<>();
+        listPlageAdjascentToWater = new ArrayList<>();
+        listMontagneAdjascentToWater = new ArrayList<>();
         loadImages();
-        System.out.println("Succesfuly init Playing Game");
+    }
+    public void setIslands(List<Pion>[] islands){
+        this.islands = islands;
     }
 
     public void setHexagons(List<Hexagon>hexagons){
         this.hexagons = hexagons;
     }
 
-    private String getHexagonEffect(int effectValue){
-        switch (effectValue){
-            case 1:
-                return "greenshark";
-            case 2:
-                return "greenwhale";
-            case 3:
-                return "greenboat";
-            case 4:
-                return "tourbillon";
-            case 5:
-                return "volcano";
-            case 6:
-                return "daulphin";
-            case 7:
-                return "redboat";
-            case 8:
-                return "snake";
-            case 9:
-                return "redshark";
-            case 10:
-                return "redwhale";
-            case 11:
-                return "sharkdefense";
-            case 12:
-                return "whaledefense";
-            default:
-                return "none";
-        }
-    }
-
 
     @Override
     public void update() {
         tuileEffectOverlay.update();
+        updateTuilesPlageAdjascentToWater();
+        for(Hexagon hex : hexagons){
+            hex.update();
+        }
     }
 
     private void initClasses()  {
@@ -142,11 +167,23 @@ public class RetirerTuile extends State implements StateInterface {
     public void mouseClicked(MouseEvent e) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        System.out.println("mouse clicked\n");
-
         for (Hexagon hex : hexagons) {
-            if (isPointInsideHexagon(mouseX, mouseY, hex) && !hex.isClicked() ) {
-                handleHexagonClick(hex);
+            if (isPointInsideHexagon(mouseX, mouseY, hex) && !hex.isClicked() && isAdjacentToWater(hex)) {
+                if(listPlageAdjascentToWater.contains(hex)) {
+                    handleHexagonClick(hex);
+                    listPlageAdjascentToWater.remove(hex);
+                    currentTuilePlageCounter--;
+                }
+                else if(listForetAdjascentToWater.contains(hex) && listPlageAdjascentToWater.isEmpty()){
+                    handleHexagonClick(hex);
+                    listForetAdjascentToWater.remove(hex);
+                    currentTuileForetCounter--;
+                }
+                else if(listMontagneAdjascentToWater.contains(hex) && listPlageAdjascentToWater.isEmpty() && listForetAdjascentToWater.isEmpty() ){
+                    handleHexagonClick(hex);
+                    listMontagneAdjascentToWater.remove(hex);
+                    currentTuileMontagneCounter--;
+                }
                 break;
             }
         }
@@ -156,11 +193,27 @@ public class RetirerTuile extends State implements StateInterface {
         return dist < radius;
     }
 
+    public boolean isAdjacentToWater(Hexagon hex){
+        List<Hexagon> adjacents = hex.getAdjacentHexagons(hexagons);
+        for(Hexagon hexagon : adjacents){
+            if(hexagon.getType()== Hexagon.Type.NONE){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
     private void handleHexagonClick(Hexagon hex) {
             if(hex.getType()!= Hexagon.Type.NONE){
                 setTuileSelected(true);
                 setSelectedHex(hex);
                 hex.setClicked(true);
+                hex.setType(Hexagon.Type.NONE);
+                for(Pion pion : hex.getListPion()){
+                    pion.setNageur(true);
+                }
+                tuileEffectOverlay.playCurrentEffect(hex);
             }
     }
 

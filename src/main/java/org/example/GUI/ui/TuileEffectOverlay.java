@@ -3,10 +3,15 @@ package org.example.GUI.ui;
 import org.example.GUI.gamestates.RetirerTuile;
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
-
+import org.example.Logic.Model.Baleine;
+import org.example.Logic.Model.Bateau;
+import org.example.Logic.Model.Pion;
+import org.example.Logic.Model.Requin;
+import java.util.List;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
 
 public class TuileEffectOverlay {
 
@@ -31,13 +36,13 @@ public class TuileEffectOverlay {
     private Game game;
 
 
-    public TuileEffectOverlay(RetirerTuile retirerTuile, Game game){
-        this.game=game;
-        this.retirerTuile=retirerTuile;
+    public TuileEffectOverlay(RetirerTuile retirerTuile, Game game) {
+        this.game = game;
+        this.retirerTuile = retirerTuile;
         LoadImages();
     }
 
-    public void LoadImages()  {
+    public void LoadImages() {
         try {
             BackGround = ImageIO.read(getClass().getResource("/Plaque.png"));
 
@@ -55,8 +60,7 @@ public class TuileEffectOverlay {
 
             SharkDefens = ImageIO.read(getClass().getResource("/defence_requin.png"));
             WhaleDefens = ImageIO.read(getClass().getResource("/defence_baleine.png"));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -126,10 +130,113 @@ public class TuileEffectOverlay {
         g.setFont(font);
 
         g.setColor(Color.black);
-        g.drawString(Tip, Game.GAME_WIDTH / 3 - 350, 300);
+
+        drawCenteredString(g, Tip, new Rectangle(Game.GAME_WIDTH*61/192, Game.GAME_HEIGHT*7/24, Game.GAME_WIDTH *35/96, Game.GAME_HEIGHT *10/24));
+
+        g.dispose();
+
 
 
     }
-    public void update(){
+
+    private void drawCenteredString(Graphics g, String text, Rectangle rect) {
+        FontMetrics metrics = g.getFontMetrics();
+        int lineHeight = metrics.getHeight();
+        int y = rect.y;
+
+        String[] words = text.split(" ");
+        StringBuilder line = new StringBuilder();
+
+        for (String word : words) {
+            if (metrics.stringWidth(line + word) < rect.width) {
+                line.append(word).append(" ");
+            } else {
+                int x = (rect.width - metrics.stringWidth(line.toString())) / 2;
+                g.drawString(line.toString(), rect.x + x, y += lineHeight);
+                line = new StringBuilder(word).append(" ");
+            }
+        }
+        int x = (rect.width - metrics.stringWidth(line.toString())) / 2;
+        g.drawString(line.toString(), rect.x + x, y += lineHeight);
     }
+    public void update() {
+    }
+
+    public void playCurrentEffect(Hexagon hex) {
+        switch (hex.getEffet()) {
+            case GREENSHARK -> {
+                Requin requin = new Requin();
+                hex.setRequin(requin);
+                game.getGameBoard().addRequin(requin);
+            }
+            case GREENWHALE -> {
+                Baleine baleine = new Baleine();
+                hex.setBaleine(baleine);
+                game.getGameBoard().addBaleine(baleine);
+            }
+            case GREENBOAT -> {
+                Bateau bateau = new Bateau();
+                hex.setBateau(bateau);
+                int count = 0;
+                for(Pion pion: hex.getListPion()){
+                        if(count<3){
+                        bateau.addExplorer(pion);
+                        hex.getListPion().remove(pion);
+                        count++;
+                    }
+                }
+            }
+            case TOURBILLON -> {
+                List<Hexagon> adjascents = hex.getAdjacentHexagons(retirerTuile.getHexagons());
+                deleteSeaCreatures(hex);
+                for(Hexagon hexagon : adjascents) {
+                    if(hexagon.getType()== Hexagon.Type.NONE){
+                        deleteSeaCreatures(hex);
+                    }
+                }
+                deleteSeaCreatures(hex);
+            }
+            case VOLCANO -> {
+                game.setEndGame(true);
+            }
+            case DAULPHIN -> {
+            }
+            case REDBOAT -> {
+            }
+            case SNAKE -> {
+            }
+            case REDSHARK -> {
+            }
+            case REDWHALE -> {
+            }
+            case SHARKDEFENSE -> {
+
+            }
+            case WHALEDEFENSE -> {
+            }
+            case NONE -> {
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + hex.getEffet());
+        }
+
+    }
+    public void deleteSeaCreatures(Hexagon hex){
+        hex.setBateau(null);
+        if(hex.getRequin()!=null){
+            game.getGameBoard().removeRequin(hex.getRequin());
+            hex.setRequin(null);
+        }
+        if(hex.getRequin()!=null){
+            game.getGameBoard().removeBaleine(hex.getBaleine());
+            hex.setBaleine(null);
+        }
+        hex.setSerpent(null);
+        for(Pion pion : hex.getListPion()){
+            if (pion.isNageur() || !pion.isOnIsland()){
+                hex.getListPion().remove(pion);
+            }
+        }
+
+    }
+
 }
