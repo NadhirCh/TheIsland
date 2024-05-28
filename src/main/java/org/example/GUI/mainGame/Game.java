@@ -2,11 +2,14 @@ package org.example.GUI.mainGame;
 
 import org.example.GUI.gamestates.*;
 import org.example.GUI.gamestates.Menu;
+import org.example.GUI.ui.Audio;
 import org.example.Logic.Model.Board;
 import org.example.Logic.Model.Pion;
 import org.example.Logic.Model.Player;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
@@ -39,6 +42,7 @@ public class Game implements Runnable {
     private BufferedImage pionJauneImage;
     private BufferedImage pionVertImage;
 
+    private Audio audioPlayer;
 
     // island 0 => bottom left / island 1 => bottom right / island 2 => top right / island 3 => top left
     private List<Pion>[] islands = new ArrayList[4];
@@ -48,7 +52,7 @@ public class Game implements Runnable {
     private JouerTuile jouerTuile;
 
 
-    public Game() {
+    public Game() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         initClasses();
         for (int i = 0; i < islands.length; i++) {
             islands[i] = new ArrayList<>();
@@ -59,12 +63,13 @@ public class Game implements Runnable {
         gamePanel.requestFocus();
         startGameLoop();
     }
-    private void initClasses() {
+    private void initClasses() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         gameBoard = new Board();
         pionSelection = new PionSelection(this);
         pionSelection.setHexagons(gameBoard.getHexagons());
         jouerTuile = new JouerTuile(this);
         menu = new Menu(this);
+        audioPlayer = new Audio();
         bateauSelection = new BateauSelection(this);
         retirerTuile = new RetirerTuile(this);
         lancerDe = new LancerDe(this);
@@ -111,6 +116,7 @@ public class Game implements Runnable {
 
     public void nextPlayerRound() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
     }
     public Board getGameBoard(){
         return this.gameBoard;
@@ -135,6 +141,7 @@ public class Game implements Runnable {
                 CurrentTurn.currentTurn=CurrentTurn.LANCER_DE;
                 break;
             case LANCER_DE:
+                getAudioPlayer().playEffect(Audio.DICE);
                 jouerTuile.setIslands(islands);
                 jouerTuile.setHexagons(lancerDe.getHexagons());
                 CurrentTurn.currentTurn = CurrentTurn.JOUER_TUILE;
@@ -344,4 +351,9 @@ public class Game implements Runnable {
     public Menu getMenu() {
         return this.menu;
     }
+
+    public Audio getAudioPlayer(){
+        return audioPlayer;
+    }
 }
+

@@ -1,4 +1,3 @@
-
 package org.example.GUI.ui;
 
 import java.nio.Buffer;
@@ -77,6 +76,10 @@ public class MenuButton {
     public void resetBools() {
         mouseOver = false;
         mousePressed = false;
+    }
+
+    public GameState getState(){
+        return state;
     }
 
 }

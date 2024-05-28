@@ -171,16 +171,19 @@ public class TuileEffectOverlay {
     public void playCurrentEffect(Hexagon hex) {
         switch (hex.getEffet()) {
             case GREENSHARK -> {
+                game.getAudioPlayer().playEffect(Audio.SHARK);
                 Requin requin = new Requin();
                 hex.setRequin(requin);
                 game.getGameBoard().addRequin(requin);
             }
             case GREENWHALE -> {
+                game.getAudioPlayer().playEffect(Audio.WHALE);
                 Baleine baleine = new Baleine();
                 hex.setBaleine(baleine);
                 game.getGameBoard().addBaleine(baleine);
             }
             case GREENBOAT -> {
+                game.getAudioPlayer().playEffect(Audio.WATER);
                 Bateau bateau = new Bateau();
                 hex.setBateau(bateau);
                 int count = 0;
@@ -193,6 +196,7 @@ public class TuileEffectOverlay {
                 }
             }
             case TOURBILLON -> {
+                game.getAudioPlayer().playEffect(Audio.WHIRLPOOL);
                 List<Hexagon> adjascents = hex.getAdjacentHexagons(retirerTuile.getHexagons());
                 deleteSeaCreatures(hex);
                 for(Hexagon hexagon : adjascents) {
@@ -203,22 +207,31 @@ public class TuileEffectOverlay {
                 deleteSeaCreatures(hex);
             }
             case VOLCANO -> {
+                game.getAudioPlayer().stopSong();
+                game.getAudioPlayer().playEffect(Audio.VOLCANO);
                 game.setEndGame(true);
             }
             case DAULPHIN -> {
+                game.getAudioPlayer().playEffect(Audio.DOLPHIN);
             }
             case REDBOAT -> {
+                game.getAudioPlayer().playEffect(Audio.WATER);
             }
             case SNAKE -> {
             }
             case REDSHARK -> {
+                game.getAudioPlayer().playEffect(Audio.SHARK);
             }
             case REDWHALE -> {
+                game.getAudioPlayer().playEffect(Audio.WHALE);
             }
             case SHARKDEFENSE -> {
+                game.getAudioPlayer().playEffect(Audio.SHARK);
 
             }
             case WHALEDEFENSE -> {
+                game.getAudioPlayer().playEffect(Audio.WHALE);
+
             }
             case NONE -> {
             }

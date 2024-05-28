@@ -2,6 +2,7 @@ package org.example.GUI.gamestates;
 
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
+import org.example.GUI.ui.Audio;
 import org.example.Logic.Model.Bateau;
 import org.example.Logic.Model.Pion;
 
@@ -282,6 +283,7 @@ public class DeplacerElement extends State implements StateInterface {
         if(!hex.getBateau().isEmpty()){
             for(Pion explorer : hex.getBateau().getExplorers()){
                 if(game.getCurrentPlayer().getColor()==explorer.getColor()){
+                    game.getAudioPlayer().playEffect(Audio.BOAT);
                     pionSelected = explorer;
                     pionSelected.setNageur(true);
                     hex.getBateau().removeExplorer(pionSelected);
@@ -294,8 +296,9 @@ public class DeplacerElement extends State implements StateInterface {
 
     private void movePionToBateau(Hexagon hex) {
          if (hex.getBateau().addExplorer(pionSelected)) {
+            game.getAudioPlayer().playEffect(Audio.BOAT);
             pionSelected.quitIsland();
-             pionSelected.setNageur(false);
+            pionSelected.setNageur(false);
             pionSelected = null;
             adjascentHexagons.clear();
             moveCount++;
@@ -308,9 +311,11 @@ public class DeplacerElement extends State implements StateInterface {
         if((pionSelected.isNageur() && hex.getType()== Hexagon.Type.NONE )||(!pionSelected.isNageur())) {
             hex.addPawnToHexagon(pionSelected);
             if (hex.getType() == Hexagon.Type.NONE) {
+                game.getAudioPlayer().playEffect(Audio.WATER);
                 pionSelected.quitIsland();
                 pionSelected.setNageur(true);
             }
+            game.getAudioPlayer().playEffect(Audio.PIECEMOVE);
             pionSelected = null;
             adjascentHexagons.clear();
             moveCount++;
@@ -350,6 +355,7 @@ public class DeplacerElement extends State implements StateInterface {
     private void placeBateau(Hexagon hex) {
         if (hex.getBateau() == null && adjascentHexagons.contains(hex) ) {
             if(hex.getType()== Hexagon.Type.NONE) {
+                game.getAudioPlayer().playEffect(Audio.WATER);
                 hex.setBateau(bateauSelected);
                 bateauSelected = null;
                 moveCount++;
