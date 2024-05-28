@@ -15,6 +15,7 @@ import static java.awt.geom.Point2D.distance;
 import org.example.GUI.ui.MenuButton;
 import static org.example.GUI.ui.Buttons.UI.Button.*;
 
+
 public class Menu extends State implements StateInterface {
 
     private MenuButton[] buttons = new MenuButton[3];
@@ -29,14 +30,11 @@ public class Menu extends State implements StateInterface {
     }
     private void loadBackground() {
         backgroundImg = ImageDealingWith.GetSpriteAtlas(ImageDealingWith.MENU_BACKGROUND);
-        menuWidth = backgroundImg.getWidth()+100; // Use actual width of the image
-        menuHeight = backgroundImg.getHeight()+100; // Use actual height of the image
+        menuWidth = Game.GAME_WIDTH;
+        menuHeight = Game.GAME_HEIGHT;
+        menuX = 0 ;
 
-        // Adjust menuX to move the background slightly to the left
-        int offsetX = 2; // Adjust this value as needed
-        menuX = Game.GAME_WIDTH / 2 - menuWidth / 2 - offsetX;
-
-        menuY = 190; // Adjust Y position if needed
+        menuY = 0;
     }
 
     private void loadButtons() {

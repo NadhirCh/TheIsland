@@ -87,7 +87,7 @@ public class Game implements Runnable {
             throw new RuntimeException(e);
         }
 
-        GameState.state = GameState.PLAYING;
+        GameState.state = GameState.MENU;
     }
     public void startBateauSelection(){
         bateauSelection.setHexagons(pionSelection.getHexagons());
