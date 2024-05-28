@@ -1,5 +1,6 @@
 package org.example.GUI.ui;
 
+import org.example.GUI.gamestates.JouerTuile;
 import org.example.GUI.gamestates.RetirerTuile;
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
@@ -15,6 +16,7 @@ import java.awt.image.BufferedImage;
 
 public class TuileEffectOverlay {
 
+    private JouerTuile jouerTuile;
     private RetirerTuile retirerTuile;
     private BufferedImage BackGround;
 
@@ -39,6 +41,11 @@ public class TuileEffectOverlay {
     public TuileEffectOverlay(RetirerTuile retirerTuile, Game game) {
         this.game = game;
         this.retirerTuile = retirerTuile;
+        LoadImages();
+    }
+    public TuileEffectOverlay(JouerTuile jouerTuile, Game game) {
+        this.game = game;
+        this.jouerTuile = jouerTuile;
         LoadImages();
     }
 
@@ -71,7 +78,6 @@ public class TuileEffectOverlay {
             g.drawImage(BackGround, Game.GAME_WIDTH / 4, Game.GAME_HEIGHT / 4, Game.GAME_WIDTH / 2, Game.GAME_HEIGHT / 2, null);
         }
         String Tip="";
-
         switch(hex.getEffet()){
             case GREENSHARK ->{
                 g.drawImage(GreenShark,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT*10/24 ,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);

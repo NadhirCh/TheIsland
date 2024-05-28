@@ -147,11 +147,11 @@ public class LancerDe extends State implements StateInterface {
         if(deLancee) {
             if(game.getGameBoard().getBaleinesOnBoard().isEmpty() && currentDiceImage==dePhaseBaleine){
                 resetTurnState();
-                game.nextPlayerRound();
+                game.nextTurn();
             }
             else if(game.getGameBoard().getRequinsOnBoard().isEmpty() && currentDiceImage==dePhaseRequin){
                 resetTurnState();
-                game.nextPlayerRound();
+                game.nextTurn();
             }
             else {
                 for (Hexagon hex : hexagons) {
@@ -188,7 +188,7 @@ public class LancerDe extends State implements StateInterface {
             if(adjascentHexagons.contains(hex)) {
                 hex.setSerpent(serpentSelected);
                 resetTurnState();
-                game.nextPlayerRound();
+                game.nextTurn();
             }
         }
     }
@@ -204,8 +204,7 @@ public class LancerDe extends State implements StateInterface {
             if(adjascentHexagons.contains(hex)) {
                 hex.setRequin(requinSelected);
                 resetTurnState();
-
-                game.nextPlayerRound();
+                game.nextTurn();
             }
         }
     }
@@ -221,7 +220,7 @@ public class LancerDe extends State implements StateInterface {
             if(adjascentHexagons.contains(hex)) {
                 hex.setBaleine(baleineSelected);
                 resetTurnState();
-                game.nextPlayerRound();
+                game.nextTurn();
             }
         }
     }

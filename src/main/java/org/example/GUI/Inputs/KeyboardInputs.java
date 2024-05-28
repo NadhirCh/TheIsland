@@ -44,9 +44,13 @@ public class KeyboardInputs implements KeyListener {
                 switch (CurrentTurn.currentTurn){
                     case RETIRER_TUILE :
                         gamePanel.getGame().getRetirerTuile().keyPressed(e);
+                        break;
                     case LANCER_DE:
                         gamePanel.getGame().getLancerDe().keyPressed(e);
-
+                        break;
+                    case JOUER_TUILE:
+                        gamePanel.getGame().getJouerTuile().keyPressed(e);
+                        break;
                 }
                 break;
             case BATEAU_SELECTION:

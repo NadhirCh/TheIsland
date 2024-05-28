@@ -45,6 +45,7 @@ public class Game implements Runnable {
 
     private boolean gameEnded;
     private Menu menu;
+    private JouerTuile jouerTuile;
 
 
     public Game() {
@@ -62,6 +63,7 @@ public class Game implements Runnable {
         gameBoard = new Board();
         pionSelection = new PionSelection(this);
         pionSelection.setHexagons(gameBoard.getHexagons());
+        jouerTuile = new JouerTuile(this);
         menu = new Menu(this);
         bateauSelection = new BateauSelection(this);
         retirerTuile = new RetirerTuile(this);
@@ -89,12 +91,17 @@ public class Game implements Runnable {
 
         GameState.state = GameState.MENU;
     }
+
+    public List<Player> getListPlayers(){
+        return this.players;
+    }
     public void startBateauSelection(){
         bateauSelection.setHexagons(pionSelection.getHexagons());
         GameState.state = GameState.BATEAU_SELECTION;
     }
     public void startGame(){
         GameState.state = GameState.PLAYING;
+        CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
         System.out.println("Game Started !!");
         deplacerElement.setHexagons(bateauSelection.getHexagons());
     }
@@ -104,17 +111,17 @@ public class Game implements Runnable {
 
     public void nextPlayerRound() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
     }
     public Board getGameBoard(){
         return this.gameBoard;
     }
 
-
-    //CHANGE LATER
     public void nextTurn() {
         switch (CurrentTurn.currentTurn){
             case JOUER_TUILE :
+                deplacerElement.setIslands(islands);
+                deplacerElement.setHexagons(jouerTuile.getHexagons());
+                CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
                 break;
             case DEPLACER_ELEMENT:
                 retirerTuile.setIslands(islands);
@@ -128,13 +135,20 @@ public class Game implements Runnable {
                 CurrentTurn.currentTurn=CurrentTurn.LANCER_DE;
                 break;
             case LANCER_DE:
-                deplacerElement.setIslands(islands);
-                deplacerElement.setHexagons(lancerDe.getHexagons());
-                CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
+                jouerTuile.setIslands(islands);
+                jouerTuile.setHexagons(lancerDe.getHexagons());
+                CurrentTurn.currentTurn = CurrentTurn.JOUER_TUILE;
+                GameState.state = GameState.PLAYING;
+                nextPlayerRound();
                 break;
 
         }
     }
+
+    public JouerTuile getJouerTuile() {
+        return jouerTuile;
+    }
+
     public RetirerTuile getRetirerTuile(){
         return this.retirerTuile;
     }
@@ -190,12 +204,19 @@ public class Game implements Runnable {
                 return null;
         }
     }
+    public void drawSideBar(Graphics g){
+        retirerTuile.InitSideBar();
+        retirerTuile.setSideBar(this.getCurrentPlayer().getPouvoires());
+        retirerTuile.getBar().draw((Graphics2D) g,retirerTuile.getSideBar());
+    }
 
 
     public void render(Graphics g) {
         switch (GameState.state) {
             case PLAYING :
                 switch (CurrentTurn.currentTurn){
+                    case JOUER_TUILE:
+                        jouerTuile.draw(g);
                     case DEPLACER_ELEMENT :
                         deplacerElement.draw(g);
                         break;
@@ -207,6 +228,7 @@ public class Game implements Runnable {
                         break;
                 }
                 drawPawnsArrived(g);
+                drawSideBar(g);
                 break;
             case MENU:
                 menu.draw(g);
@@ -245,6 +267,7 @@ public class Game implements Runnable {
                     retirerTuile.update();
                     break;
                 case JOUER_TUILE:
+                    jouerTuile.update();
                     break;
             }
             case MENU:

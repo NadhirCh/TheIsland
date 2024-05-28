@@ -5,6 +5,7 @@ import org.example.Logic.Model.*;
 
 import javax.imageio.ImageIO;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -42,6 +43,10 @@ public class Hexagon {
     return radius;
     }
 
+    public void setEffet(Effect effet) {
+        this.effet = effet;
+    }
+
 
     public enum Type {
         LAND, FOREST, MOUNTAIN, NONE
@@ -51,7 +56,23 @@ public class Hexagon {
         GREENSHARK, GREENWHALE, GREENBOAT, TOURBILLON, VOLCANO,
         DAULPHIN, REDBOAT, SNAKE, REDSHARK, REDWHALE,
         SHARKDEFENSE, WHALEDEFENSE,
-        NONE
+        NONE;
+        public ArrayList<Effect>redList(){
+            return new ArrayList<>(Arrays.asList(DAULPHIN,REDBOAT,SNAKE,REDSHARK,REDWHALE,
+                    SHARKDEFENSE,WHALEDEFENSE));
+        }
+    }
+    public Hexagon(int x, int y, int radius, String type, String effet) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.type = Type.valueOf(type.toUpperCase());
+        this.setClicked(false);
+        //pour definir l'effet à partir de l'initialisation aussi
+        this.effet=Effect.valueOf(effet.toUpperCase());
+        this.polygon = createHexagon(x, y, radius);
+        this.pions = new ArrayList<Pion>();
+        loadImages();
     }
 
     public Hexagon(int x, int y, int radius, String type, String effet, int row, int col) {
@@ -73,6 +94,11 @@ public class Hexagon {
 
         loadImages();
     }
+    public Polygon getPolygon() {
+        return polygon;
+    }
+
+
 
     public Type getType() {
         return this.type;
@@ -81,23 +107,59 @@ public class Hexagon {
         this.type = type;
     }
 
+    public Player existsWhaleEffect(){
+        for(Player player : game.getListPlayers()) {
+            for ( Hexagon hexagon : player.getPouvoires()) {
+                if (hexagon.getEffet() == Effect.WHALEDEFENSE) {
+                    return player;
+                }
+            }
+        }
+        return null ;
+    }
+    public Player existsSharkEffect(){
+        for(Player player : game.getListPlayers()) {
+            for ( Hexagon hexagon : player.getPouvoires()) {
+                if (hexagon.getEffet() == Effect.SHARKDEFENSE) {
+                    return player;
+                }
+            }
+        }
+        return null ;
+    }
+
+
     public void update(){
         if(this.serpent != null){
-            this.bateau = null;
-            pions.clear();
+                this.bateau = null;
+                pions.clear();
         }
         if(this.baleine !=null)
         {
-            if(bateau != null) {
-                for (Pion pion : pions) {
-                    bateau.removeExplorer(pion);
-                    pion.setNageur(true);
+            if(existsWhaleEffect()==null) {
+                if (bateau != null) {
+                    for (Pion pion : pions) {
+                        bateau.removeExplorer(pion);
+                        pion.setNageur(true);
+                    }
+                    this.bateau = null;
                 }
-            this.bateau = null;
             }
+            else{
+                Player player = existsWhaleEffect();
+                player.UseWhaleDefensePower();
+            }
+
+
         }
         if(this.requin !=null){
-            pions.clear();
+            if(existsSharkEffect()== null) {
+                pions.clear();
+            }
+            else{
+                Player player = existsSharkEffect();
+                player.UseSharkDefensePower();
+            }
         }
         if((row == 1 && col == 0)||(col == 0 && row == 2)){
             for(Pion pion : pions){
