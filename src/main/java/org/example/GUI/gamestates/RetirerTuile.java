@@ -2,6 +2,7 @@ package org.example.GUI.gamestates;
 
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
+import org.example.GUI.ui.PowerBar;
 import org.example.GUI.ui.TuileEffectOverlay;
 import org.example.Logic.Model.Pion;
 import org.example.Logic.Model.Tuile;
@@ -49,6 +50,32 @@ public class RetirerTuile extends State implements StateInterface {
     private List<Hexagon> listPlageAdjascentToWater;
     private List<Hexagon> listForetAdjascentToWater;
     private List<Hexagon> listMontagneAdjascentToWater;
+    private PowerBar Bar;
+    private ArrayList<Hexagon> SideBar;
+
+    public PowerBar getBar() {
+        return Bar;
+    }
+    public ArrayList<Hexagon> getSideBar() {
+        return SideBar;
+    }
+    public void setSideBar(ArrayList<Hexagon> playerPower) {
+        int i = 0;
+        for (Hexagon hex : playerPower) {
+            this.SideBar.get(i).setEffet(hex.getEffet());
+            this.SideBar.get(i).setType(hex.getType());
+            i++;
+        }
+    }
+    public void InitSideBar(){
+        for(Hexagon hex:SideBar){
+            hex.setEffet(Hexagon.Effect.NONE);
+            hex.setType(Hexagon.Type.NONE);
+        }
+    }
+
+
+
 
 
 
@@ -107,6 +134,9 @@ public class RetirerTuile extends State implements StateInterface {
         listForetAdjascentToWater = new ArrayList<>();
         listPlageAdjascentToWater = new ArrayList<>();
         listMontagneAdjascentToWater = new ArrayList<>();
+        this.SideBar=new ArrayList<>();
+        generateSideBarGrid();
+
         loadImages();
     }
     public void setIslands(List<Pion>[] islands){
@@ -129,6 +159,27 @@ public class RetirerTuile extends State implements StateInterface {
 
     private void initClasses()  {
         this.tuileEffectOverlay=new TuileEffectOverlay(this,this.game);
+        this.Bar=new PowerBar(this.game);
+
+    }
+    public void generateSideBarGrid(){
+        int rayon=41;
+        int OffsetY= (int) (rayon * 1.5);
+        int StartY=(int) (rayon*1.5);
+        int x=(int) (rayon * 1.5);
+
+        //tableau representant la sideBar (au max un joueur peut avoir 10)
+        Tuile Bar[]=new Tuile[10];
+
+        for(int row=0;row<10;row++){
+            int y= StartY + OffsetY * row;
+
+            String type= String.valueOf(Hexagon.Type.NONE);
+            String effet=String.valueOf(Hexagon.Type.NONE);;
+
+            this.SideBar.add(new Hexagon(x,y,rayon,type,effet));
+        }
+
     }
 
     private void loadImages() {
@@ -144,6 +195,20 @@ public class RetirerTuile extends State implements StateInterface {
             e.printStackTrace();
         }
     }
+    public boolean PlayOrPreserve(Hexagon hex){
+        if(hex.getEffet().redList().contains(hex.getEffet())){
+            game.getCurrentPlayer().getPouvoires().add(hex);
+            setSideBar(game.getCurrentPlayer().getPouvoires());
+            return true;
+        }
+        return false;
+    }
+
+    public void updateSideBar(int i){
+        game.getCurrentPlayer().UsePower(i);
+        setSideBar(game.getCurrentPlayer().getPouvoires());
+        //
+    }
     @Override
     public void draw(Graphics g) {
         if (backgroundImage != null) {
@@ -155,11 +220,14 @@ public class RetirerTuile extends State implements StateInterface {
             hex.draw(g2d);
         }
 
-        if(isTuileSelected()){
-            tuileEffectOverlay.draw(g,selectedHex);
+        if (isTuileSelected()) {
+            tuileEffectOverlay.draw(g, selectedHex);
         }
+        setSideBar(game.getCurrentPlayer().getPouvoires());
 
+        if(game.isGameEnded()){
 
+        }
     }
 
 
@@ -213,7 +281,10 @@ public class RetirerTuile extends State implements StateInterface {
                 for(Pion pion : hex.getListPion()){
                     pion.setNageur(true);
                 }
-                tuileEffectOverlay.playCurrentEffect(hex);
+
+                if(!PlayOrPreserve(hex)){
+                    tuileEffectOverlay.playCurrentEffect(hex);
+                }
             }
     }
 
@@ -227,12 +298,17 @@ public class RetirerTuile extends State implements StateInterface {
 
     }
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (isTuileSelected()) {
-                setTuileSelected(false);
-                game.nextTurn();
-            }
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+                if (isTuileSelected()) {
+                    setTuileSelected(false);
+                    game.nextTurn();
+                }
+                break;
+            default:
+                break;
         }
+
     }
 
 

@@ -1,6 +1,7 @@
 package org.example.Logic.Model;
 
 import org.example.GUI.gamestates.Couleur;
+import org.example.GUI.mainGame.Hexagon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,64 @@ public class Player {
     private int[] pawnsCollection;
     private List<Tuile> handTiles;
     private List<Pion> explorers;
+    private Hexagon powerInUse;
+    private ArrayList<Hexagon>Pouvoires;
+    private int Score;
 
+    private boolean wins=false;
+
+
+
+    public Hexagon getPowerInUse() {
+        return powerInUse;
+    }
+
+    //choix de la tuile à utiliser
+    public void UsePower(int i){
+        if(HavePouvoir()){
+            powerInUse=Pouvoires.remove(i);
+        }
+    }
+    public void UseWhaleDefensePower(){
+        for(Hexagon hex : Pouvoires){
+            if(hex.getEffet() == Hexagon.Effect.WHALEDEFENSE){
+                Pouvoires.remove(hex);
+                break;
+            }
+        }
+    }
+    public void UseSharkDefensePower(){
+        for(Hexagon hex : Pouvoires){
+            if(hex.getEffet() == Hexagon.Effect.SHARKDEFENSE){
+                Pouvoires.remove(hex);
+                break;
+            }
+        }
+    }
+
+    public ArrayList<Hexagon> getPouvoires() {
+        return Pouvoires;
+    }
+
+    public boolean HavePouvoir(){
+        return !Pouvoires.isEmpty();
+    }
+
+    public void addPouvoir(Hexagon hex){
+        Pouvoires.add(hex);
+    }
+
+    public int getScore() {
+        return Score;
+    }
+
+    public void setScore(int score) {
+        Score = score;
+    }
+
+    public void setWins(boolean wins){
+        this.wins=wins;
+    }
 
     private Couleur couleur;
 
@@ -20,6 +78,7 @@ public class Player {
         this.couleur = couleur;
         this.handTiles = new ArrayList<>();
         this.explorers = new ArrayList<>();
+        this.Pouvoires=new ArrayList<>();
 
     }
 

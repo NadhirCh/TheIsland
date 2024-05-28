@@ -1,5 +1,6 @@
 package org.example.GUI.ui;
 
+import org.example.GUI.gamestates.JouerTuile;
 import org.example.GUI.gamestates.RetirerTuile;
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
@@ -15,6 +16,7 @@ import java.awt.image.BufferedImage;
 
 public class TuileEffectOverlay {
 
+    private JouerTuile jouerTuile;
     private RetirerTuile retirerTuile;
     private BufferedImage BackGround;
 
@@ -34,11 +36,19 @@ public class TuileEffectOverlay {
     private BufferedImage WhaleDefens;
 
     private Game game;
+    private EndGameOverlay endGame;
 
 
     public TuileEffectOverlay(RetirerTuile retirerTuile, Game game) {
         this.game = game;
         this.retirerTuile = retirerTuile;
+        this.endGame=new EndGameOverlay(game);
+        LoadImages();
+    }
+    public TuileEffectOverlay(JouerTuile jouerTuile, Game game) {
+        this.game = game;
+        this.jouerTuile = jouerTuile;
+        this.endGame=new EndGameOverlay(game);
         LoadImages();
     }
 
@@ -71,7 +81,6 @@ public class TuileEffectOverlay {
             g.drawImage(BackGround, Game.GAME_WIDTH / 4, Game.GAME_HEIGHT / 4, Game.GAME_WIDTH / 2, Game.GAME_HEIGHT / 2, null);
         }
         String Tip="";
-
         switch(hex.getEffet()){
             case GREENSHARK ->{
                 g.drawImage(GreenShark,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT*10/24 ,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
@@ -90,8 +99,9 @@ public class TuileEffectOverlay {
                 Tip="retirez du jeu tous ce qui occupe la tuile de terrain et de toutes les cases mer adjacentes";
             }
             case VOLCANO -> {
-                g.drawImage(Volcano,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
-                Tip="Fin du jeu";
+//                g.drawImage(Volcano,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
+//                Tip="Fin du jeu";
+                endGame.draw(g);
             }
             case DAULPHIN -> {
                 g.drawImage(Daulphin,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
@@ -115,11 +125,11 @@ public class TuileEffectOverlay {
             }
             case SHARKDEFENSE -> {
                 g.drawImage(SharkDefens,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
-                Tip="";
+                Tip="Quand un autre joueur déplace un requin dans une case occupée par l’un de vos nageurs, vous pouvez jouer cette tuile pour retirer le requin du jeu.";
             }
             case WHALEDEFENSE -> {
                 g.drawImage(WhaleDefens,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
-                Tip="";
+                Tip="Quand un autre joueur déplace une baleine dans une case occupée par un de vos bateaux vous pouvez jouer cette tuile pour retirer la baleine du jeu.";
             }
             case NONE -> {
             }
@@ -198,6 +208,7 @@ public class TuileEffectOverlay {
             }
             case VOLCANO -> {
                 game.setEndGame(true);
+                game.countScore();
             }
             case DAULPHIN -> {
             }
