@@ -71,11 +71,19 @@ public class LancerDe extends State implements StateInterface {
 
         if (deLancee) {
             if (game.getGameBoard().getBaleinesOnBoard().isEmpty() && currentDiceImage == dePhaseBaleine) {
-                // sleep 0.5 sec here
+                try {
+                    game.getGameThread().sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 resetTurnState();
                 game.nextTurn();
             } else if (game.getGameBoard().getRequinsOnBoard().isEmpty() && currentDiceImage == dePhaseRequin) {
-                // sleep 0.5 sec here
+                try {
+                    game.getGameThread().sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 resetTurnState();
                 game.nextTurn();
             }

@@ -196,7 +196,7 @@ public class TuileEffectOverlay {
                 deleteSeaCreatures(hex);
                 for(Hexagon hexagon : adjascents) {
                     if(hexagon.getType()== Hexagon.Type.NONE){
-                        deleteSeaCreatures(hex);
+                        deleteSeaCreatures(hexagon);
                     }
                 }
             }

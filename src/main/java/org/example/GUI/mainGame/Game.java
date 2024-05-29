@@ -378,5 +378,9 @@ public class Game implements Runnable {
     public AudioOptions getAudioOptions() {
         return audioOptions;
     }
+
+    public Thread getGameThread() {
+        return gameThread;
+    }
 }
 
