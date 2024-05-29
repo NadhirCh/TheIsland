@@ -101,6 +101,13 @@ public class TuileRougeOverlay {
         g.setColor(Color.black);
 
         drawCenteredString(g, Tip, new Rectangle(Game.GAME_WIDTH*61/192, Game.GAME_HEIGHT*7/24, Game.GAME_WIDTH *35/96, Game.GAME_HEIGHT *10/24));
+        String additionalText = "Press [Q] to continue and Enter to skip";
+        FontMetrics metrics = g.getFontMetrics();
+        int textWidth = metrics.stringWidth(additionalText);
+        int textHeight = metrics.getHeight();
+        int textX = (Game.GAME_WIDTH - textWidth) / 2;
+        int textY = Game.GAME_HEIGHT * 10 / 11;
+        g.drawString(additionalText, textX, textY);
 
         g.dispose();
 

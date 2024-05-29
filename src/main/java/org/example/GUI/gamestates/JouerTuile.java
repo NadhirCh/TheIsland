@@ -40,6 +40,8 @@ public class JouerTuile extends State implements StateInterface{
     private Serpent serpentSelected;
     private boolean canSelectSerpent = false;
     private boolean canDraw = false;
+    private boolean canMoveNageur = false;
+    private Pion pionNageur;
 
 
     public JouerTuile(Game game){
@@ -76,6 +78,7 @@ public class JouerTuile extends State implements StateInterface{
                     canSelectSerpent = true;
                     break;
                 case DAULPHIN:
+                    canMoveNageur = true;
                     break;
             }
         }
@@ -109,11 +112,53 @@ public class JouerTuile extends State implements StateInterface{
                     else if(canSelectSerpent){
                         handleSerpent(hex);
                     }
+                    else if(canMoveNageur){
+                        handleNageur(hex);
+                    }
                     break;
                 }
             }
         }
     }
+
+    private void handleNageur(Hexagon hex) {
+        if(pionNageur == null) {
+            selectPionNageur(hex);
+        }
+        else{
+            placePionNageur(hex);
+        }
+    }
+
+    private void placePionNageur(Hexagon hex) {
+        if(hex.getType() == Hexagon.Type.NONE && adjascentHexagons.contains(hex)){
+            if(moveCounter<3){
+                hex.addPawnToHexagon(pionNageur);
+                pionNageur = null;
+                moveCounter++;
+                if(moveCounter == 3){
+                    canMoveNageur = false;
+                    adjascentHexagons.clear();
+                    game.nextTurn();
+                }
+            }
+        }
+    }
+
+    private void selectPionNageur(Hexagon hex) {
+        if(hex.getListPion()!=null && hex.getType() == Hexagon.Type.NONE){
+            for(Pion pion : hex.getListPion()){
+                if(pion.getColor()==game.getCurrentPlayer().getColor() && pion.isNageur()){
+                    pionNageur = pion;
+                    adjascentHexagons = hex.getAdjacentHexagons(hexagons);
+                    hex.getListPion().remove(pionNageur);
+                    break;
+                }
+            }
+        }
+    }
+
+
 
     private void handleBateauClick(Hexagon hex) {
         if (bateauSelected == null) {
@@ -139,6 +184,7 @@ public class JouerTuile extends State implements StateInterface{
                 if(moveCounter == 3){
                     canSelectBateau = false;
                     moveCounter = 0;
+                    adjascentHexagons.clear();
                     game.nextTurn();
                 }
             }

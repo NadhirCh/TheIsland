@@ -139,9 +139,9 @@ public class Hexagon {
         {
             if(existsWhaleEffect()==null) {
                 if (bateau != null) {
-                    for (Pion pion : pions) {
-                        bateau.removeExplorer(pion);
+                    for (Pion pion : bateau.getExplorers()) {
                         pions.add(pion);
+                        bateau.removeExplorer(pion);
                         pion.setNageur(true);
                     }
                     this.bateau = null;
