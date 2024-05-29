@@ -100,24 +100,16 @@ public class RetirerTuile extends State implements StateInterface {
             if(isAdjacentToWater(hex)){
                 switch (hex.getType()){
                     case LAND :
-                        if(hex.getRow()==6 && hex.getCol()==5){
+                        if(!listPlageAdjascentToWater.contains(hex)){
+                        listPlageAdjascentToWater.add(hex);
                             break;
                         }
-                        else if(!listPlageAdjascentToWater.contains(hex)){
-                        listPlageAdjascentToWater.add(hex);}
-                        break;
                     case  FOREST:
-                        if(hex.getRow()==6 && hex.getCol()==5){
-                            break;
-                        }
-                        else if(!listForetAdjascentToWater.contains(hex))
+                       if(!listForetAdjascentToWater.contains(hex))
                         {listForetAdjascentToWater.add(hex);}
                         break;
                     case MOUNTAIN:
-                        if(hex.getRow()==6 && hex.getCol()==5){
-                            break;
-                        }
-                        else if(!listMontagneAdjascentToWater.contains(hex)){
+                        if(!listMontagneAdjascentToWater.contains(hex)){
                             listMontagneAdjascentToWater.add(hex);
                         }
                         break;
@@ -269,19 +261,21 @@ public class RetirerTuile extends State implements StateInterface {
     }
 
     private void handleHexagonClick(Hexagon hex) {
-            if(hex.getType()!= Hexagon.Type.NONE){
+        if(!tuileSelected) {
+            if (hex.getType() != Hexagon.Type.NONE) {
                 setTuileSelected(true);
                 setSelectedHex(hex);
                 hex.setClicked(true);
                 hex.setType(Hexagon.Type.NONE);
-                for(Pion pion : hex.getListPion()){
+                for (Pion pion : hex.getListPion()) {
                     pion.setNageur(true);
                 }
 
-                if(!PlayOrPreserve(hex)){
+                if (!PlayOrPreserve(hex)) {
                     tuileEffectOverlay.playCurrentEffect(hex);
                 }
             }
+        }
     }
 
     @Override

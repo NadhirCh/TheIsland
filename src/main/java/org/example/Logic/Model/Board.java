@@ -25,11 +25,12 @@ public class Board {
     private Game game;
 
 
-    public Board(){
+    public Board(Game game){
         loadImages();
         hexagons = new ArrayList<Hexagon>();
         requinsOnBoard = new ArrayList<Requin>();
         baleinesOnBoard = new ArrayList<Baleine>();
+        this.game = game;
         generateHexagonGrid();
     }
 
@@ -67,7 +68,7 @@ public class Board {
                 int y = startY + yOffset * row;
                 String type = getHexagonType(matrice.matrix[row][col].getType());
                 String effect = getHexagonEffect(matrice.matrix[row][col].getEffect());
-                Hexagon hex = new Hexagon(x, y, radius, type, effect,row,col);
+                Hexagon hex = new Hexagon(x, y, radius, type, effect,row,col,game);
                 if (matrice.matrix[row][col].getType() == 4) {
                     hex.setSerpent(new Serpent());
                 }
