@@ -25,15 +25,15 @@ public class VolumeButton extends PauseButton{
         private int xOffsetCenter = B_WIDTH / 2;
         private GameState state;
         private BufferedImage[] imgs;
-        private Rectangle bounds = new Rectangle();
         private BufferedImage slider;
 
         public VolumeButton(int xPos, int yPos, int width, int height) {
             super(xPos + width / 2, yPos, VOLUME_WIDTH, height);
             this.height = height;
             bounds.x -= VOLUME_WIDTH / 2;
-            buttonX =xPos+ width / 2;
+            buttonX = xPos + width / 2;
             this.xPos = xPos;
+            this.yPos = yPos;
             this.width = width;
             minX =xPos+ VOLUME_WIDTH / 2;
             maxX =xPos+ width - VOLUME_WIDTH / 2;
@@ -61,8 +61,8 @@ public class VolumeButton extends PauseButton{
 
         public void draw(Graphics g) {
 
-                //g.drawImage(slider, xPos, yPos, width, height, null);
-                //g.drawImage(imgs[index], buttonX - VOLUME_WIDTH / 2, yPos, VOLUME_WIDTH, height, null);
+                g.drawImage(slider, xPos, yPos, width, height, null);
+                g.drawImage(imgs[index], buttonX - VOLUME_WIDTH / 2, yPos, VOLUME_WIDTH, height, null);
 
         }
 
@@ -75,7 +75,6 @@ public class VolumeButton extends PauseButton{
                         buttonX = x;
                 updateFloatValue();
                 bounds.x = buttonX - VOLUME_WIDTH / 2;
-
         }
 
         private void updateFloatValue() {

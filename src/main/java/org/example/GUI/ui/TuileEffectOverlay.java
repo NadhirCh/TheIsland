@@ -96,7 +96,6 @@ public class TuileEffectOverlay {
             case TOURBILLON -> {
                 g.drawImage(Tourbillon,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="retirez du jeu tous ce qui occupe la tuile de terrain et de toutes les cases mer adjacentes";
-
             }
             case VOLCANO -> {
                 if (!gameEnded) {
