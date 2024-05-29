@@ -15,6 +15,7 @@ public class Player {
     private Hexagon powerInUse;
     private ArrayList<Hexagon>Pouvoires;
     private Game game;
+    private int Score;
 
 
     public Hexagon getPowerInUse() {
@@ -98,5 +99,14 @@ public class Player {
             return 0;
         }
     }
+
+    public int getScore() {
+        return Score;
+    }
+
+    public void setScore(int score) {
+        this.Score=score;
+    }
+
 
 }

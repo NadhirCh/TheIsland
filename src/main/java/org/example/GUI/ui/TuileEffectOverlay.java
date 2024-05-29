@@ -37,10 +37,13 @@ public class TuileEffectOverlay {
 
     private Game game;
 
+    private EndGameOverlay endGameOverlay;
+
 
     public TuileEffectOverlay(RetirerTuile retirerTuile, Game game) {
         this.game = game;
         this.retirerTuile = retirerTuile;
+        this.endGameOverlay = new EndGameOverlay(game);
         LoadImages();
     }
 
@@ -76,15 +79,15 @@ public class TuileEffectOverlay {
         switch(hex.getEffet()){
             case GREENSHARK ->{
                 g.drawImage(GreenShark,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT*10/24 ,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
-                Tip="Prenez un pion requin mis de côté et placez sur la case de mer qu’occupait la tuile ";
+                Tip="Prenez un  requin mis de côté et placez sur la case de mer qu’occupait la tuile ";
             }
             case GREENWHALE -> {
                 g.drawImage(GreenWhale,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
-                Tip="Prenez un pion baleine mis de côté et placez-le sur la case de mer qu’occupait la tuile";
+                Tip="Prenez un  baleine mis de côté et placez-le sur la case de mer qu’occupait la tuile";
             }
             case GREENBOAT -> {
                 g.drawImage(GreenBoat,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
-                Tip="Prenez un pion bateau mis de côté et placez-le sur la case de mer qu’occupait la tuile";
+                Tip="Prenez un  bateau mis de côté et placez-le sur la case de mer qu’occupait la tuile";
             }
             case TOURBILLON -> {
                 g.drawImage(Tourbillon,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
@@ -93,6 +96,13 @@ public class TuileEffectOverlay {
             case VOLCANO -> {
                 g.drawImage(Volcano,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Fin du jeu";
+
+                try {
+                    game.getGameThread().sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                endGameOverlay.draw(g);
             }
             case DAULPHIN -> {
                 g.drawImage(Daulphin,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
@@ -116,11 +126,11 @@ public class TuileEffectOverlay {
             }
             case SHARKDEFENSE -> {
                 g.drawImage(SharkDefens,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
-                Tip="";
+                Tip="Quand un autre joueur déplace un requin dans une case occupée par l’un de vos nageurs, vous pouvez jouer cette tuile pour retirer le requin du jeu.";
             }
             case WHALEDEFENSE -> {
                 g.drawImage(WhaleDefens,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
-                Tip="";
+                Tip="Quand un autre joueur déplace une baleine dans une case occupée par un de vos bateaux vous pouvez jouer cette tuile pour retirer la baleine du jeu.";
             }
             case NONE -> {
             }
@@ -203,6 +213,7 @@ public class TuileEffectOverlay {
             case VOLCANO -> {
                 game.getAudioPlayer().stopSong();
                 game.getAudioPlayer().playEffect(Audio.VOLCANO);
+                game.countScore();
                 game.setEndGame(true);
             }
             case DAULPHIN -> {
