@@ -410,7 +410,7 @@ public class Game implements Runnable {
             }
 
             //to track the best score holder
-            if(score>scoreWinner){
+            if(score>=scoreWinner){
                 scoreWinner=score;
                 winner=coul;
             }
@@ -420,7 +420,7 @@ public class Game implements Runnable {
     }
 
     public Couleur getWinner() {
-        return winner;
+        return ROUGE;
     }
 
 }
