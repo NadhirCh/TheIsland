@@ -23,11 +23,13 @@ public class Audio {
     public static int KRAKEN = 11;
 
 
-    private Clip[] songs, effects;
+    private Clip[] songs;
+    private Clip[] effects;
     private int currentSongID;
     private float effectsVolume = 0.75f;
     private float songVolume = effectsVolume * 0.85f;
-    private boolean songMute, effectMute = false;
+    private boolean songMute = false;
+    private boolean effectMute = false;
     //private int viewIndex;
     //private Random rand = new Random();
 
@@ -65,15 +67,6 @@ public class Audio {
             effects[i] = getClip(effectNames[i]);
         }
         updateEffectsVolume();
-    }
-
-
-    public void setSongView(int viewIndex){
-
-    }
-
-    public void gameEnded(){
-
     }
 
     public void playEffect(int effect){
@@ -136,6 +129,10 @@ public class Audio {
             float value = (range * effectsVolume) + gainControl.getMinimum();
             gainControl.setValue(value);
         }
+    }
+
+    public boolean getEffectMute(){
+        return effectMute;
     }
 
     public Audio() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
