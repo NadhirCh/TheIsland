@@ -2,6 +2,7 @@ package org.example.Logic.Model;
 
 import org.example.GUI.gamestates.Couleur;
 import org.example.GUI.mainGame.Hexagon;
+import org.example.GUI.mainGame.Game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Player {
     private List<Pion> explorers;
     private Hexagon powerInUse;
     private ArrayList<Hexagon>Pouvoires;
-
+    private Game game;
 
 
     public Hexagon getPowerInUse() {
@@ -29,6 +30,7 @@ public class Player {
     public void UseWhaleDefensePower(){
         for(Hexagon hex : Pouvoires){
             if(hex.getEffet() == Hexagon.Effect.WHALEDEFENSE){
+
                 Pouvoires.remove(hex);
                 break;
             }

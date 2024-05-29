@@ -132,8 +132,8 @@ public class Hexagon {
 
     public void update(){
         if(this.serpent != null){
-                this.bateau = null;
-                pions.clear();
+            this.bateau = null;
+            pions.clear();
         }
         if(this.baleine !=null)
         {

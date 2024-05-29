@@ -3,6 +3,7 @@ package org.example.GUI.gamestates;
 import org.example.GUI.animations.DiceAnimation;
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
+import org.example.GUI.ui.Audio;
 import org.example.Logic.Model.*;
 
 import javax.imageio.ImageIO;
@@ -136,12 +137,15 @@ public class LancerDe extends State implements StateInterface {
         }
         drawDe(g);
         if (requinSelected != null) {
+            //game.getAudioPlayer().playEffect(Audio.SHARK);
             g.drawImage(requinImage, (int) xDelta, (int) yDelta, requinImage.getWidth()/2, requinImage.getHeight()/2, null);
         }
         else if (baleineSelected !=null){
+            //game.getAudioPlayer().playEffect(Audio.WHALE);
             g.drawImage(baleineImage, (int) xDelta, (int) yDelta, baleineImage.getWidth()/2, baleineImage.getHeight()/2, null);
         }
         else if(serpentSelected != null){
+            //game.getAudioPlayer().playEffect(Audio.KRAKEN);
             g.drawImage(serpentImage,(int) xDelta,(int) yDelta,serpentImage.getWidth()/2,serpentImage.getHeight()/2,null);
         }
 
@@ -158,10 +162,12 @@ public class LancerDe extends State implements StateInterface {
 
         if(deLancee) {
             if(game.getGameBoard().getBaleinesOnBoard().isEmpty() && currentDiceImage==dePhaseBaleine){
+                game.getAudioPlayer().playEffect(Audio.WHALE);
                 resetTurnState();
                 game.nextTurn();
             }
             else if(game.getGameBoard().getRequinsOnBoard().isEmpty() && currentDiceImage==dePhaseRequin){
+                game.getAudioPlayer().playEffect(Audio.SHARK);
                 resetTurnState();
                 game.nextTurn();
             }
@@ -181,10 +187,13 @@ public class LancerDe extends State implements StateInterface {
     }
     private void handleMonsterClick(Hexagon hex) {
         if (currentDiceImage == dePhaseSerpent) {
+            game.getAudioPlayer().playEffect(Audio.KRAKEN);
             handleSerpentClick(hex);
         } else if (currentDiceImage == dePhaseRequin) {
+            game.getAudioPlayer().playEffect(Audio.SHARK);
             handleRequinClick(hex);
         } else if (currentDiceImage == dePhaseBaleine) {
+            game.getAudioPlayer().playEffect(Audio.WHALE);
             handleBaleineClick(hex);
         }
     }
@@ -242,6 +251,7 @@ public class LancerDe extends State implements StateInterface {
     private void startDiceRollAnimation() {
         diceRollDuration = 3000 + (int) (Math.random() * 2000);
         startTime = System.currentTimeMillis();
+        //game.getAudioPlayer().playEffect(Audio.DICE);
         diceRollTimer.start();
     }
     private void resetTurnState() {
@@ -272,6 +282,7 @@ public class LancerDe extends State implements StateInterface {
     }
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER && !deLancee) {
+            game.getAudioPlayer().playEffect(Audio.DICE);
                 startDiceRollAnimation();
         }
     }

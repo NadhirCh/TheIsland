@@ -3,6 +3,7 @@ package org.example.GUI.gamestates;
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
 import org.example.GUI.mainGame.Matrice;
+import org.example.GUI.ui.Audio;
 import org.example.Logic.Model.Pion;
 import org.example.GUI.ui.PawnSelectionOverlay;
 import org.example.Logic.Model.Serpent;
@@ -123,6 +124,7 @@ public class PionSelection extends State implements StateInterface {
 
     private int handleHexagonClick(Hexagon hex) {
         if (hex.getListPion().isEmpty() && hex.getType()!= Hexagon.Type.NONE ) {
+            game.getAudioPlayer().playEffect(Audio.PIECEMOVE);
             hex.addPawnToHexagon(new Pion(game.getCurrentPlayer().getColor(), 1));
             pawnPlacedCount++;
             if (pawnPlacedCount == TOTAL_PAWNS) {

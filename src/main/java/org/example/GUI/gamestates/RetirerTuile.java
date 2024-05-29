@@ -2,6 +2,7 @@ package org.example.GUI.gamestates;
 
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
+import org.example.GUI.ui.Audio;
 import org.example.GUI.ui.PowerBar;
 import org.example.GUI.ui.TuileEffectOverlay;
 import org.example.Logic.Model.Pion;
@@ -263,6 +264,7 @@ public class RetirerTuile extends State implements StateInterface {
     private void handleHexagonClick(Hexagon hex) {
         if(!tuileSelected) {
             if (hex.getType() != Hexagon.Type.NONE) {
+                game.getAudioPlayer().playEffect(Audio.TILE);
                 setTuileSelected(true);
                 setSelectedHex(hex);
                 hex.setClicked(true);
@@ -298,7 +300,6 @@ public class RetirerTuile extends State implements StateInterface {
             default:
                 break;
         }
-
     }
 
 

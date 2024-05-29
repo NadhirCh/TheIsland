@@ -1,6 +1,8 @@
 package org.example.GUI.gamestates;
 
 import org.example.GUI.mainGame.Game;
+import org.example.GUI.mainGame.Hexagon;
+import org.example.GUI.ui.Audio;
 import org.example.GUI.ui.ImageDealingWith;
 
 import javax.imageio.ImageIO;
@@ -8,10 +10,12 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
+import static java.awt.geom.Point2D.distance;
 import org.example.GUI.ui.MenuButton;
-
 import static org.example.GUI.ui.Buttons.UI.Button.*;
+
 
 public class Menu extends State implements StateInterface {
 
@@ -91,8 +95,15 @@ public class Menu extends State implements StateInterface {
     public void mouseReleased(MouseEvent e) {
         for (MenuButton mb : buttons) {
             if (isIn(e, mb)) {
+                game.getAudioPlayer().playEffect(Audio.MENUCLICK);
                 if (mb.isMousePressed())
                     mb.applyGamestate();
+                if (mb.getState() == GameState.PIONS_SELECTION){
+                    game.getAudioPlayer().playSong(Audio.INGAME);
+                }
+                if(mb.getState() == GameState.QUIT){
+
+                }
                 break;
             }
         }

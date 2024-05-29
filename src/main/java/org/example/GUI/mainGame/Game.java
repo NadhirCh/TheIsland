@@ -2,11 +2,15 @@ package org.example.GUI.mainGame;
 
 import org.example.GUI.gamestates.*;
 import org.example.GUI.gamestates.Menu;
+import org.example.GUI.ui.Audio;
+import org.example.GUI.ui.AudioOptions;
 import org.example.Logic.Model.Board;
 import org.example.Logic.Model.Pion;
 import org.example.Logic.Model.Player;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
@@ -38,7 +42,9 @@ public class Game implements Runnable {
     private BufferedImage pionBleuImage;
     private BufferedImage pionJauneImage;
     private BufferedImage pionVertImage;
-
+    private AudioOptions audioOptions;
+    private Audio audioPlayer;
+    private GameOptions gameOptions;
 
     // island 0 => bottom left / island 1 => bottom right / island 2 => top right / island 3 => top left
     private List<Pion>[] islands = new ArrayList[4];
@@ -48,7 +54,7 @@ public class Game implements Runnable {
     private JouerTuile jouerTuile;
 
 
-    public Game() {
+    public Game() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         initClasses();
         for (int i = 0; i < islands.length; i++) {
             islands[i] = new ArrayList<>();
@@ -59,12 +65,15 @@ public class Game implements Runnable {
         gamePanel.requestFocus();
         startGameLoop();
     }
-    private void initClasses() {
+    private void initClasses() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        audioOptions = new AudioOptions(this);
         gameBoard = new Board(this);
         pionSelection = new PionSelection(this);
         pionSelection.setHexagons(gameBoard.getHexagons());
         jouerTuile = new JouerTuile(this);
         menu = new Menu(this);
+        audioPlayer = new Audio();
+        gameOptions = new GameOptions(this);
         bateauSelection = new BateauSelection(this);
         retirerTuile = new RetirerTuile(this);
         lancerDe = new LancerDe(this);
@@ -233,6 +242,9 @@ public class Game implements Runnable {
             case MENU:
                 menu.draw(g);
                 break;
+            case OPTIONS:
+                gameOptions.draw(g);
+                break;
             case PIONS_SELECTION:
                 pionSelection.draw(g);
                 break;
@@ -274,11 +286,17 @@ public class Game implements Runnable {
             case MENU:
                 menu.update();
                 break;
+            case OPTIONS:
+                gameOptions.update();
+                break;
             case PIONS_SELECTION:
                 pionSelection.update();
                 break;
             case BATEAU_SELECTION:
                 bateauSelection.update();
+                break;
+            case QUIT:
+            default:
                 break;
         }
     }
@@ -345,4 +363,20 @@ public class Game implements Runnable {
     public Menu getMenu() {
         return this.menu;
     }
+
+    public AudioOptions audioOptions(){
+        return audioOptions;
+    }
+    public Audio getAudioPlayer(){
+        return audioPlayer;
+    }
+
+    public GameOptions getGameOptions(){
+        return gameOptions;
+    }
+
+    public AudioOptions getAudioOptions() {
+        return audioOptions;
+    }
 }
+

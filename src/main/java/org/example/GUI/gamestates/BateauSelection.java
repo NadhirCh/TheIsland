@@ -2,6 +2,7 @@ package org.example.GUI.gamestates;
 
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
+import org.example.GUI.ui.Audio;
 import org.example.Logic.Model.Bateau;
 
 import javax.imageio.ImageIO;
@@ -111,6 +112,7 @@ public class BateauSelection extends State implements StateInterface {
 
     private int handleHexagonClick(Hexagon hex) {
         if (hex.getBateau() == null) {
+            game.getAudioPlayer().playEffect(Audio.WATER);
             hex.setBateau(new Bateau());
             bateauPlaced = true;
             currentBateauCount++;
