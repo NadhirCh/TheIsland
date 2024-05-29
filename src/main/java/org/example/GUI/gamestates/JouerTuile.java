@@ -2,6 +2,7 @@ package org.example.GUI.gamestates;
 
 import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.Hexagon;
+import org.example.GUI.ui.Audio;
 import org.example.GUI.ui.TuileEffectOverlay;
 import org.example.Logic.Model.Pion;
 
@@ -35,6 +36,7 @@ public class JouerTuile extends State implements StateInterface{
     }
 
     public void updateSideBar(int i){
+        game.getAudioPlayer().playEffect(Audio.TILE);
         game.getCurrentPlayer().UsePower(i);
         setSideBar(game.getCurrentPlayer().getPouvoires());
         selectedTuile = game.getCurrentPlayer().getPowerInUse();

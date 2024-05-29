@@ -346,6 +346,7 @@ public class DeplacerElement extends State implements StateInterface {
 
     private void selectBateau(Hexagon hex) {
         if (hex.getBateau() != null && hex.getBateau().getControlleurBateau().contains(game.getCurrentPlayer().getColor())) {
+            game.getAudioPlayer().playEffect(Audio.BOAT);
             bateauSelected = hex.getBateau();
             adjascentHexagons = hex.getAdjacentHexagons(hexagons);
             hex.setBateau(null);

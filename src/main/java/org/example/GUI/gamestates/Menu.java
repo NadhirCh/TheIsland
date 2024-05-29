@@ -95,6 +95,9 @@ public class Menu extends State implements StateInterface {
                 if (mb.getState() == GameState.PIONS_SELECTION){
                     game.getAudioPlayer().playSong(Audio.INGAME);
                 }
+                if(mb.getState() == GameState.QUIT){
+
+                }
                 break;
             }
         }

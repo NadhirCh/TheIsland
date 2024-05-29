@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 
 import org.example.GUI.gamestates.GameState;
 import static  org.example.GUI.ui.Buttons.UI.Button.* ;
+
 public class MenuButton {
     private int xPos, yPos, rowIndex, index;
     private int xOffsetCenter = B_WIDTH / 2;

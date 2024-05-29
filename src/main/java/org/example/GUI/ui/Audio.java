@@ -20,6 +20,7 @@ public class Audio {
     public static int WHIRLPOOL = 8;
     public static int VOLCANO = 9;
     public static int DICE = 10;
+    public static int KRAKEN = 11;
 
 
     private Clip[] songs, effects;
@@ -58,7 +59,7 @@ public class Audio {
     }
 
     private void loadEffects() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
-        String[] effectNames = {"menuClick", "pieceMove", "tile", "water", "boat", "whale", "shark", "dolphin", "whirlpool", "volcano", "dice"};
+        String[] effectNames = {"menuClick", "pieceMove", "tile", "water", "boat", "whale", "shark", "dolphin", "whirlpool", "volcano", "dice", "kraken"};
         effects = new Clip[effectNames.length];
         for(int i = 0; i < effectNames.length; i++){
             effects[i] = getClip(effectNames[i]);
@@ -142,4 +143,5 @@ public class Audio {
         loadEffects();
         playSong(MENU);
     }
+
 }
