@@ -67,7 +67,7 @@ public class Game implements Runnable {
     }
     private void initClasses() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         audioOptions = new AudioOptions(this);
-        gameBoard = new Board();
+        gameBoard = new Board(this);
         pionSelection = new PionSelection(this);
         pionSelection.setHexagons(gameBoard.getHexagons());
         jouerTuile = new JouerTuile(this);
@@ -111,7 +111,6 @@ public class Game implements Runnable {
     public void startGame(){
         GameState.state = GameState.PLAYING;
         CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
-        System.out.println("Game Started !!");
         deplacerElement.setHexagons(bateauSelection.getHexagons());
     }
     public Player getCurrentPlayer() {
@@ -120,7 +119,6 @@ public class Game implements Runnable {
 
     public void nextPlayerRound() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
     }
     public Board getGameBoard(){
         return this.gameBoard;
@@ -145,7 +143,6 @@ public class Game implements Runnable {
                 CurrentTurn.currentTurn=CurrentTurn.LANCER_DE;
                 break;
             case LANCER_DE:
-                getAudioPlayer().playEffect(Audio.DICE);
                 jouerTuile.setIslands(islands);
                 jouerTuile.setHexagons(lancerDe.getHexagons());
                 CurrentTurn.currentTurn = CurrentTurn.JOUER_TUILE;
@@ -224,11 +221,12 @@ public class Game implements Runnable {
 
     public void render(Graphics g) {
         switch (GameState.state) {
-            case PLAYING :
-                switch (CurrentTurn.currentTurn){
+            case PLAYING:
+                switch (CurrentTurn.currentTurn) {
                     case JOUER_TUILE:
                         jouerTuile.draw(g);
-                    case DEPLACER_ELEMENT :
+                        break;  // Missing break statement
+                    case DEPLACER_ELEMENT:
                         deplacerElement.draw(g);
                         break;
                     case LANCER_DE:
@@ -253,9 +251,9 @@ public class Game implements Runnable {
             case BATEAU_SELECTION:
                 bateauSelection.draw(g);
                 break;
-
         }
     }
+
     private void startGameLoop() {
         gameThread = new Thread(this);
         gameThread.start();
@@ -284,6 +282,7 @@ public class Game implements Runnable {
                     jouerTuile.update();
                     break;
             }
+            break;
             case MENU:
                 menu.update();
                 break;

@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
     private GamePanel gamePanel;
@@ -20,7 +19,6 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     @Override
     public void mouseDragged(MouseEvent e) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -31,7 +29,6 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
                 break;
             case PLAYING:
                 switch (CurrentTurn.currentTurn) {
-
                     case DEPLACER_ELEMENT:
                         gamePanel.getGame().getMoveElement().mouseMoved(e);
                         break;
@@ -39,6 +36,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
                         gamePanel.getGame().getLancerDe().mouseMoved(e);
                         break;
                 }
+                break; // Added break statement
             case BATEAU_SELECTION:
                 gamePanel.getGame().getBateauSelection().mouseMoved(e);
                 break;
@@ -57,6 +55,9 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
             case PIONS_SELECTION:
                 gamePanel.getGame().getPionSelection().mouseClicked(e);
                 break;
+            case MENU:
+                gamePanel.getGame().getMenu().mouseClicked(e);
+                break;
             case PLAYING:
                 switch (CurrentTurn.currentTurn) {
                     case DEPLACER_ELEMENT:
@@ -67,7 +68,12 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
                         break;
                     case RETIRER_TUILE:
                         gamePanel.getGame().getRetirerTuile().mouseClicked(e);
+                        break;
+                    case JOUER_TUILE:
+                        gamePanel.getGame().getJouerTuile().mouseClicked(e);
+                        break;
                 }
+                break; // Added break statement
             case BATEAU_SELECTION:
                 gamePanel.getGame().getBateauSelection().mouseClicked(e);
                 break;
@@ -93,6 +99,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
                         gamePanel.getGame().getMoveElement().mousePressed(e);
                         break;
                 }
+                break; // Added break statement
             case MENU:
                 gamePanel.getGame().getMenu().mousePressed(e);
                 break;
@@ -105,7 +112,6 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
         switch (GameState.state) {
             case PIONS_SELECTION:
                 gamePanel.getGame().getPionSelection().mouseReleased(e);
@@ -116,6 +122,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
                         gamePanel.getGame().getMoveElement().mouseReleased(e);
                         break;
                 }
+                break; // Added break statement
             case MENU:
                 gamePanel.getGame().getMenu().mouseReleased(e);
                 break;
@@ -128,13 +135,10 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         // TODO Auto-generated method stub
-
     }
-
 }

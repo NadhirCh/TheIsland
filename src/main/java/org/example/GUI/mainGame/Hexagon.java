@@ -75,7 +75,7 @@ public class Hexagon {
         loadImages();
     }
 
-    public Hexagon(int x, int y, int radius, String type, String effet, int row, int col) {
+    public Hexagon(int x, int y, int radius, String type, String effet, int row, int col,Game game) {
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -84,6 +84,7 @@ public class Hexagon {
         this.row = row;
         this.col = col;
         this.isClicked = false;
+        this.game = game;
 
         this.polygon = createHexagon(x, y, radius);
         this.pions = new ArrayList<>();
@@ -140,6 +141,7 @@ public class Hexagon {
                 if (bateau != null) {
                     for (Pion pion : pions) {
                         bateau.removeExplorer(pion);
+                        pions.add(pion);
                         pion.setNageur(true);
                     }
                     this.bateau = null;
@@ -323,6 +325,10 @@ public class Hexagon {
         drawRequin(g);
         drawBaleine(g);
         drawSerpent(g);
+    }
+
+    public boolean isEmpty(){
+        return(bateau == null && this.type == Type.NONE && baleine == null && serpent == null && pions.isEmpty());
     }
 
     private BufferedImage getTuileImageToDraw() {

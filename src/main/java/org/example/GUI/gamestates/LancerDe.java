@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static java.awt.geom.Point2D.distance;
 
 public class LancerDe extends State implements StateInterface {
@@ -64,11 +65,22 @@ public class LancerDe extends State implements StateInterface {
 
     @Override
     public void update() {
-        for(Hexagon hex : hexagons){
+        for (Hexagon hex : hexagons) {
             hex.update();
         }
-    }
 
+        if (deLancee) {
+            if (game.getGameBoard().getBaleinesOnBoard().isEmpty() && currentDiceImage == dePhaseBaleine) {
+                // sleep 0.5 sec here
+                resetTurnState();
+                game.nextTurn();
+            } else if (game.getGameBoard().getRequinsOnBoard().isEmpty() && currentDiceImage == dePhaseRequin) {
+                // sleep 0.5 sec here
+                resetTurnState();
+                game.nextTurn();
+            }
+        }
+    }
     private void initClasses() {
     }
 

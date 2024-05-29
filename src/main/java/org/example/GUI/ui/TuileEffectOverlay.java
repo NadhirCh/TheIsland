@@ -43,11 +43,6 @@ public class TuileEffectOverlay {
         this.retirerTuile = retirerTuile;
         LoadImages();
     }
-    public TuileEffectOverlay(JouerTuile jouerTuile, Game game) {
-        this.game = game;
-        this.jouerTuile = jouerTuile;
-        LoadImages();
-    }
 
     public void LoadImages() {
         try {
@@ -204,7 +199,6 @@ public class TuileEffectOverlay {
                         deleteSeaCreatures(hex);
                     }
                 }
-                deleteSeaCreatures(hex);
             }
             case VOLCANO -> {
                 game.getAudioPlayer().stopSong();
@@ -245,16 +239,14 @@ public class TuileEffectOverlay {
             game.getGameBoard().removeRequin(hex.getRequin());
             hex.setRequin(null);
         }
-        if(hex.getRequin()!=null){
+        if(hex.getBaleine()!=null){
             game.getGameBoard().removeBaleine(hex.getBaleine());
             hex.setBaleine(null);
         }
         hex.setSerpent(null);
-        for(Pion pion : hex.getListPion()){
-            if (pion.isNageur() || !pion.isOnIsland()){
-                hex.getListPion().remove(pion);
-            }
-        }
+
+        hex.getListPion().clear();
+
 
     }
 

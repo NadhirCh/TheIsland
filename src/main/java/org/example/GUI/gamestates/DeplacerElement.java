@@ -198,7 +198,6 @@ public class DeplacerElement extends State implements StateInterface {
     public void mouseClicked(MouseEvent e) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        System.out.println(mouseX + "   " + mouseY);
 
         for (Hexagon hex : hexagons) {
             if (isPointInsideHexagon(mouseX, mouseY, hex)) {
