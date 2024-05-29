@@ -18,6 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.geom.Point2D.distance;
+/**
+ * The JouerTuile class represents the game state for playing tuiles (tiles) in the game.
+ * It handles the selection and usage of tuiles, as well as interactions with game elements such as boats, sharks, whales, and serpents.
+ */
+
 
 public class JouerTuile extends State implements StateInterface{
 
@@ -41,7 +46,11 @@ public class JouerTuile extends State implements StateInterface{
     private boolean canSelectSerpent = false;
     private boolean canDraw = false;
 
-
+     /**
+     * Constructs a new JouerTuile instance.
+     *
+     * @param game the Game instance associated with this state
+     */
     public JouerTuile(Game game){
         super(game);
         loadImages();
@@ -49,16 +58,29 @@ public class JouerTuile extends State implements StateInterface{
 
     }
 
+    /**
+     * Sets the sidebar containing tuiles to be displayed.
+     *
+     * @param sideBar the list of Hexagons representing the sidebar
+     */
     public void setSideBar(List<Hexagon> sideBar) {
         this.sideBar = sideBar;
     }
-
+    /**
+     * Updates the sidebar with the tuiles available to the current player.
+     *
+     * @param i the index of the tuile to be used
+     */
     public void updateSideBar(int i){
         game.getAudioPlayer().playEffect(Audio.TILE);
         game.getCurrentPlayer().UsePower(i);
         setSideBar(game.getCurrentPlayer().getPouvoires());
         selectedTuile = game.getCurrentPlayer().getPowerInUse();
     }
+
+    /**
+     * Plays the effect associated with the selected tuile.
+     */
     private void playEffect(){
         if(selectedTuile != null) {
             System.out.println(selectedTuile.getEffet().name());
@@ -80,6 +102,12 @@ public class JouerTuile extends State implements StateInterface{
             }
         }
     }
+
+    /**
+     * Sets the sidebar with the tuiles from the provided list.
+     *
+     * @param playerPower the list of Hexagons representing tuiles available to the player
+     */
     public void setSideBar(ArrayList<Hexagon> playerPower) {
         int i = 0;
         for (Hexagon hex : playerPower) {
@@ -88,6 +116,13 @@ public class JouerTuile extends State implements StateInterface{
             i++;
         }
     }
+
+    /**
+     * Handles mouse click events in the game state for playing tuiles.
+    * It checks for the position of the mouse click and performs appropriate actions based on the selected tuile.
+    *
+    * @param e the MouseEvent representing the mouse click event
+    */
     @Override
     public void mouseClicked(MouseEvent e) {
         int mouseX = e.getX();
@@ -114,7 +149,11 @@ public class JouerTuile extends State implements StateInterface{
             }
         }
     }
-
+    /**
+    * Handles the click event for selecting a bateau.
+    *
+    * @param hex the Hexagon representing the position where the bateau is to be selected
+    */
     private void handleBateauClick(Hexagon hex) {
         if (bateauSelected == null) {
             selectBateau(hex);
@@ -122,6 +161,12 @@ public class JouerTuile extends State implements StateInterface{
             placeBateau(hex);
         }
     }
+
+    /**
+     * Selects a bateau at the specified hexagon position.
+    *
+    * @param hex the Hexagon representing the position where the bateau is to be selected
+    */
     private void selectBateau(Hexagon hex) {
 
         if (hex.getBateau() != null && hex.getBateau().getControlleurBateau().contains(game.getCurrentPlayer().getColor())) {
@@ -130,6 +175,12 @@ public class JouerTuile extends State implements StateInterface{
             hex.setBateau(null);
         }
     }
+
+    /**
+    * Places the selected bateau at the specified hexagon position.
+    *
+    * @param hex the Hexagon representing the position where the bateau is to be placed
+    */
     private void placeBateau(Hexagon hex) {
         if (hex.getBateau() == null && adjascentHexagons.contains(hex) ) {
             if(hex.getType()== Hexagon.Type.NONE) {
@@ -144,6 +195,12 @@ public class JouerTuile extends State implements StateInterface{
             }
         }
     }
+
+    /**
+    * Handles the click event for selecting a baleine.
+    *
+    * @param hex the Hexagon representing the position where the baleine is to be selected
+    */
     private void handleBaleineClick(Hexagon hex) {
         if (baleineSelected == null) {
             if (hex.getBaleine() != null) {
@@ -160,6 +217,12 @@ public class JouerTuile extends State implements StateInterface{
             }
         }
     }
+
+    /**
+    * Handles the click event for selecting a serpent.
+    *
+    * @param hex the Hexagon representing the position where the serpent is to be selected
+    */
     private void handleSerpent(Hexagon hex) {
         if (serpentSelected == null) {
             if (hex.getBaleine() != null) {
@@ -176,7 +239,11 @@ public class JouerTuile extends State implements StateInterface{
             }
         }
     }
-
+    /**
+    * Handles the click event for selecting a requin.
+    *
+    * @param hex the Hexagon representing the position where the requin is to be selected
+    */
     private void handleRequinClick(Hexagon hex) {
         if (requinSelected == null) {
             if (hex.getRequin() != null) {
@@ -192,11 +259,24 @@ public class JouerTuile extends State implements StateInterface{
             }
         }
     }
+
+    /**
+    * Checks if the given coordinates are inside the hexagon.
+    *
+    * @param mouseX the x-coordinate of the mouse click
+    * @param mouseY the y-coordinate of the mouse click
+    * @param hex    the Hexagon to check
+    * @return true if the coordinates are inside the hexagon, false otherwise
+    */
     private boolean isPointInsideHexagon(int mouseX, int mouseY, Hexagon hex) {
         double dist = distance(mouseX, mouseY, hex.getX(), hex.getY());
         return dist < 40;
     }
 
+    
+    /**
+    * Loads the background image for the game.
+    */
     private void loadImages(){
         try {
             backgroundImage = ImageIO.read(getClass().getResource("/the_island.png"));
@@ -206,6 +286,12 @@ public class JouerTuile extends State implements StateInterface{
             e.printStackTrace();
         }
     }
+
+    /**
+    * Handles the key pressed event for updating the sidebar and enabling drawing.
+    *
+    * @param e the KeyEvent representing the key pressed event
+    */
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_0:
@@ -263,19 +349,38 @@ public class JouerTuile extends State implements StateInterface{
         }
 
     }
-
+    /**
+    * Sets the islands in the game.
+     *
+    * @param islands the islands to set
+    */
     public void setIslands(List<Pion>[] islands) {
         this.islands = islands;
     }
 
+    /**
+    * Sets the hexagons in the game.
+    *
+    * @param hexagons the hexagons to set
+    */
     public void setHexagons(List<Hexagon> hexagons) {
         this.hexagons=hexagons;
     }
 
+    /**
+    * Gets the list of hexagons in the game.
+    *
+    * @return the list of hexagons
+    */
     public List<Hexagon> getHexagons() {
         return this.hexagons;
     }
 
+    /**
+    * Draws the game graphics including the background image, hexagons, and current turn message.
+    *
+    * @param g the Graphics object for drawing
+    */
     public void draw(Graphics g) {
         if (backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
@@ -290,6 +395,14 @@ public class JouerTuile extends State implements StateInterface{
         }
         drawCurrentTurn(g, new Rectangle(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT), new Font("Arial", Font.BOLD, 32));
     }
+
+    /**
+    * Draws the message indicating the current player's turn.
+    *
+    * @param g     the Graphics object for drawing
+    * @param rect  the rectangle representing the area to draw the message
+    * @param font  the font for the text
+    */
     private void drawCurrentTurn(Graphics g, Rectangle rect, Font font) {
         FontMetrics metrics = g.getFontMetrics(font);
         String text = "";
@@ -333,6 +446,9 @@ public class JouerTuile extends State implements StateInterface{
 
     }
 
+    /**
+     * Updates the game state, including hexagons and the current player's turn.
+    */
     public void update() {
         for(Hexagon hex : hexagons){
             hex.update();

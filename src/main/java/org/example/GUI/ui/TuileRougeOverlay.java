@@ -12,7 +12,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-
+/**
+ * Represents the overlay for displaying information about a red tile in the GUI.
+ */
 public class TuileRougeOverlay {
 
     private JouerTuile jouerTuile;
@@ -32,13 +34,21 @@ public class TuileRougeOverlay {
     private Game game;
 
 
-
+    /**
+     * Constructs a TuileRougeOverlay object with the specified game state and main game object.
+     *
+     * @param jouerTuile The game state for playing a tile.
+     * @param game       The main game object.
+     */
     public TuileRougeOverlay(JouerTuile jouerTuile, Game game) {
         this.game = game;
         this.jouerTuile = jouerTuile;
         LoadImages();
     }
 
+    /**
+     * Loads images for the overlay from the resources.
+     */
     public void LoadImages() {
         try {
             BackGround = ImageIO.read(getClass().getResource("/Plaque.png"));
@@ -56,6 +66,12 @@ public class TuileRougeOverlay {
 
     }
 
+    /**
+     * Draws the overlay on the graphics context.
+     *
+     * @param g    The Graphics object for rendering.
+     * @param hex  The hexagon tile to display information about.
+     */
     public void draw(Graphics g, Hexagon hex){
         if(BackGround!=null){
             g.drawImage(BackGround, Game.GAME_WIDTH / 4, Game.GAME_HEIGHT / 4, Game.GAME_WIDTH / 2, Game.GAME_HEIGHT / 2, null);
@@ -108,6 +124,13 @@ public class TuileRougeOverlay {
 
     }
 
+    /**
+ * Draws a string centered within a given rectangle on the graphics context.
+ *
+ * @param g     The Graphics object for rendering.
+ * @param text  The text to be drawn.
+ * @param rect  The rectangle within which the text should be centered.
+ */
     private void drawCenteredString(Graphics g, String text, Rectangle rect) {
         FontMetrics metrics = g.getFontMetrics();
         int lineHeight = metrics.getHeight();

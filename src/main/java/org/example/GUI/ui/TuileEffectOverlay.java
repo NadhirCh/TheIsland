@@ -13,7 +13,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-
+/**
+ * Represents an overlay for displaying the effects of a tile on the game board.
+ */
 public class TuileEffectOverlay {
 
     private JouerTuile jouerTuile;
@@ -37,13 +39,21 @@ public class TuileEffectOverlay {
 
     private Game game;
 
-
+    /**
+     * Constructs a new TuileEffectOverlay with the specified RetirerTuile and Game.
+     *
+     * @param retirerTuile The RetirerTuile object to use.
+     * @param game         The Game object to use.
+     */
     public TuileEffectOverlay(RetirerTuile retirerTuile, Game game) {
         this.game = game;
         this.retirerTuile = retirerTuile;
         LoadImages();
     }
 
+    /**
+     * Loads the images for the overlay.
+     */
     public void LoadImages() {
         try {
             BackGround = ImageIO.read(getClass().getResource("/Plaque.png"));
@@ -68,6 +78,12 @@ public class TuileEffectOverlay {
 
     }
 
+    /**
+ * Draws the overlay for the effects of a tile on the game board.
+ *
+ * @param g    The Graphics object for rendering.
+ * @param hex  The hexagon representing the tile on the game board.
+ */
     public void draw(Graphics g, Hexagon hex){
         if(BackGround!=null){
             g.drawImage(BackGround, Game.GAME_WIDTH / 4, Game.GAME_HEIGHT / 4, Game.GAME_WIDTH / 2, Game.GAME_HEIGHT / 2, null);
@@ -140,6 +156,13 @@ public class TuileEffectOverlay {
 
     }
 
+    /**
+ * Draws a string centered within the specified rectangle.
+ *
+ * @param g     The Graphics object for rendering.
+ * @param text  The text to be drawn.
+ * @param rect  The rectangle within which the text is centered.
+ */
     private void drawCenteredString(Graphics g, String text, Rectangle rect) {
         FontMetrics metrics = g.getFontMetrics();
         int lineHeight = metrics.getHeight();
@@ -163,6 +186,11 @@ public class TuileEffectOverlay {
     public void update() {
     }
 
+    /**
+ * Plays the current effect associated with the specified hexagon on the game board.
+ *
+ * @param hex The hexagon representing the current tile with an effect.
+ */
     public void playCurrentEffect(Hexagon hex) {
         switch (hex.getEffet()) {
             case GREENSHARK -> {
@@ -233,6 +261,12 @@ public class TuileEffectOverlay {
         }
 
     }
+
+    /**
+ * Deletes sea creatures and pawns from the specified hexagon.
+ *
+ * @param hex The hexagon from which sea creatures and pawns are to be deleted.
+ */
     public void deleteSeaCreatures(Hexagon hex){
         hex.setBateau(null);
         if(hex.getRequin()!=null){

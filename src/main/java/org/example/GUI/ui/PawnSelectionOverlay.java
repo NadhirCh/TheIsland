@@ -12,6 +12,9 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * Manages the overlay for selecting pawns.
+ */
 public class PawnSelectionOverlay {
 
     private PionSelection pionSelection;
@@ -24,6 +27,12 @@ public class PawnSelectionOverlay {
 
     private Game game;
 
+     /**
+     * Constructs a PawnSelectionOverlay with the specified parameters.
+     *
+     * @param pionSelection The PionSelection associated with this overlay.
+     * @param game          The Game instance.
+     */
     public PawnSelectionOverlay(PionSelection pionSelection,Game game) {
         this.pionSelection = pionSelection;
         this.pawnSelected = false;
@@ -31,6 +40,9 @@ public class PawnSelectionOverlay {
         loadImages();
     }
 
+    /**
+     * Loads the images used in the overlay.
+     */
     public void loadImages(){
         try {
             pionsBackground = ImageIO.read(getClass().getResource("/Plaque.png"));
@@ -43,6 +55,12 @@ public class PawnSelectionOverlay {
             e.printStackTrace();
         }
     }
+
+     /**
+     * Updates the collection of pawns based on the index.
+     *
+     * @param index The index of the pawn.
+     */
     public void updatePawnsCollection(int index) {
         Player currentPlayer = game.getCurrentPlayer();
         int result = currentPlayer.updatePawnsCollection(index);
@@ -51,14 +69,35 @@ public class PawnSelectionOverlay {
         }
     }
 
+    /**
+     * Retrieves whether a pawn is selected.
+     *
+     * @return True if a pawn is selected, false otherwise.
+     */
     public boolean getPawnSelected(){
         return this.pawnSelected;
     }
+
+     /**
+     * Sets the selected state of the pawn.
+     *
+     * @param pawnSelected The new selected state of the pawn.
+     */
     public void setPawnSelected(Boolean pawnSelected){
       this.pawnSelected = pawnSelected;
     }
+
+    /**
+     * Updates the overlay.
+     */
     public void update(){
     }
+
+    /**
+     * Handles key events for pawn selection.
+     *
+     * @param e The KeyEvent object.
+     */
     public void keyPressed(KeyEvent e) {
         if(pawnSelected == false){
         switch (e.getKeyCode()) {
@@ -90,6 +129,11 @@ public class PawnSelectionOverlay {
         }
     }
 
+    /**
+     * Draws the overlay.
+     *
+     * @param g The Graphics object.
+     */
     public void draw(Graphics g) {
 
         if (pionsBackground != null) {
