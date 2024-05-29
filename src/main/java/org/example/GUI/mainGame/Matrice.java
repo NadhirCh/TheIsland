@@ -6,15 +6,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a matrix of {@link Tuile} objects used in the game.
+ */
 public class Matrice {
 
     public Tuile[][] matrix;
 
+    /**
+     * Constructs a Matrice of the specified size and initializes it.
+     *
+     * @param size the size of the matrix (size x size)
+     */
     public Matrice(int size) {
         matrix = new Tuile[size][size];
         initializeMatrix();
     }
 
+    /**
+     * Initializes the matrix with default {@link Tuile} objects and sets predefined positions
+     * with shuffled types and effects.
+     */
     private void initializeMatrix() {
         // Initialize matrix with default Tuile objects
         for (int i = 0; i < matrix.length; i++) {
@@ -68,29 +80,44 @@ public class Matrice {
 
         // List of types and effects
         List<Integer> types = new ArrayList<>();
-        List<Integer> effects = new ArrayList<>();
+        List<Integer> effects1 = new ArrayList<>();
+        List<Integer> effects2 = new ArrayList<>();
+        List<Integer> effects3 = new ArrayList<>();
 
         int[] effectsType1 = {1, 2, 1, 2, 1, 3, 7, 2, 7, 6, 6, 8, 9, 6, 11, 10};
         int[] effectsType2 = {1, 3, 2, 1, 2, 3, 4, 6, 3, 8, 4, 12, 10, 9, 11, 12};
         int[] effectsType3 = {1, 4, 5, 4, 11, 4, 12, 4};
 
         for (int i = 0; i < 16; i++) types.add(1); // Beach
-        for (int effect : effectsType1) effects.add(effect);
+        for (int effect : effectsType1) effects1.add(effect);
 
         for (int i = 0; i < 16; i++) types.add(2); // Forest
-        for (int effect : effectsType2) effects.add(effect);
+        for (int effect : effectsType2) effects2.add(effect);
 
         for (int i = 0; i < 8; i++) types.add(3); // Mountain
-        for (int effect : effectsType3) effects.add(effect);
+        for (int effect : effectsType3) effects3.add(effect);
 
         Collections.shuffle(positions);
         Collections.shuffle(types);
-        Collections.shuffle(effects);
+        Collections.shuffle(effects1);
+        Collections.shuffle(effects2);
+        Collections.shuffle(effects3);
+
 
         for (int i = 0; i < positions.size(); i++) {
             Position pos = positions.get(i);
             int type = types.get(i);
-            int effect = effects.get(i);
+            int effect ;
+            int j=0;
+            if(type==1){
+                 effect = effects1.remove(j);
+            }
+            else if(type==2){
+                effect = effects2.get(j);
+            }
+            else{
+                effect = effects3.get(j);
+            }
             matrix[pos.row][pos.col].setType(type);
             matrix[pos.row][pos.col].setEffect(effect);
         }
@@ -102,11 +129,19 @@ public class Matrice {
         matrix[6][5].setType(4);
     }
 
-
+    /**
+     * Represents a position in the matrix with row and column indices.
+     */
     static class Position {
         int row;
         int col;
 
+        /**
+         * Constructs a Position with the specified row and column indices.
+         *
+         * @param row the row index
+         * @param col the column index
+         */
         public Position(int row, int col) {
             this.row = row;
             this.col = col;

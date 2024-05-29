@@ -2,21 +2,29 @@ package org.example.GUI.mainGame;
 
 import org.example.GUI.gamestates.*;
 import org.example.GUI.gamestates.Menu;
+import org.example.GUI.ui.Audio;
+import org.example.GUI.ui.AudioOptions;
 import org.example.Logic.Model.Board;
 import org.example.Logic.Model.Pion;
 import org.example.Logic.Model.Player;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.example.GUI.gamestates.Couleur.*;
+
+/**
+ * The main game class that initializes and manages the game components and logic.
+ * Implements the Runnable interface for multi-threading.
+ */
 
 public class Game implements Runnable {
 
@@ -40,7 +48,9 @@ public class Game implements Runnable {
     private BufferedImage pionBleuImage;
     private BufferedImage pionJauneImage;
     private BufferedImage pionVertImage;
-
+    private AudioOptions audioOptions;
+    private Audio audioPlayer;
+    private GameOptions gameOptions;
 
     // island 0 => bottom left / island 1 => bottom right / island 2 => top right / island 3 => top left
     private List<Pion>[] islands = new ArrayList[4];
@@ -50,7 +60,14 @@ public class Game implements Runnable {
     private JouerTuile jouerTuile;
     private Couleur winner;
 
-    public Game() {
+
+     /**
+     * Constructs a Game object and initializes game components.
+     * @throws UnsupportedAudioFileException If an unsupported audio file is encountered.
+     * @throws LineUnavailableException If a line cannot be opened because it is unavailable.
+     * @throws IOException If an I/O operation fails or is interrupted.
+     */
+    public Game() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         initClasses();
         for (int i = 0; i < islands.length; i++) {
             islands[i] = new ArrayList<>();
@@ -61,12 +78,21 @@ public class Game implements Runnable {
         gamePanel.requestFocus();
         startGameLoop();
     }
-    private void initClasses() {
-        gameBoard = new Board();
+     /**
+     * Initializes various game-related classes and components.
+     * @throws UnsupportedAudioFileException If an unsupported audio file is encountered.
+     * @throws LineUnavailableException If a line cannot be opened because it is unavailable.
+     * @throws IOException If an I/O operation fails or is interrupted.
+     */
+    private void initClasses() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        audioOptions = new AudioOptions(this);
+        gameBoard = new Board(this);
         pionSelection = new PionSelection(this);
         pionSelection.setHexagons(gameBoard.getHexagons());
         jouerTuile = new JouerTuile(this);
         menu = new Menu(this);
+        audioPlayer = new Audio();
+        gameOptions = new GameOptions(this);
         bateauSelection = new BateauSelection(this);
         retirerTuile = new RetirerTuile(this);
         lancerDe = new LancerDe(this);
@@ -94,29 +120,61 @@ public class Game implements Runnable {
         GameState.state = GameState.MENU;
     }
 
+    /**
+     * Retrieves the list of players in the game.
+     * @return The list of players.
+     */
     public List<Player> getListPlayers(){
         return this.players;
     }
+
+    /**
+     * Starts the boat selection phase of the game.
+     */
     public void startBateauSelection(){
         bateauSelection.setHexagons(pionSelection.getHexagons());
         GameState.state = GameState.BATEAU_SELECTION;
     }
+
+    /**
+     * Starts the main game.
+     */
+
     public void startGame(){
         GameState.state = GameState.PLAYING;
         CurrentTurn.currentTurn = CurrentTurn.DEPLACER_ELEMENT;
-        System.out.println("Game Started !!");
         deplacerElement.setHexagons(bateauSelection.getHexagons());
     }
+
+    /**
+     * Gets the current player.
+     * @return The current player.
+     */
+
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
 
+    /**
+     * Moves to the next player's turn.
+     */
+
     public void nextPlayerRound() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     }
+
+    /**
+     * Gets the game board.
+     * @return The game board.
+     */
+
     public Board getGameBoard(){
         return this.gameBoard;
     }
+
+    /**
+     * Advances the game to the next turn.
+     */
 
     public void nextTurn() {
         switch (CurrentTurn.currentTurn){
@@ -147,25 +205,56 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * Gets the 'JouerTuile' instance.
+     * @return The 'JouerTuile' instance.
+     */
+
     public JouerTuile getJouerTuile() {
         return jouerTuile;
     }
 
+    /**
+     * Gets the 'RetirerTuile' instance.
+     * @return The 'RetirerTuile' instance.
+     */
+
     public RetirerTuile getRetirerTuile(){
         return this.retirerTuile;
     }
+
+    /**
+     * Gets the current game state.
+     * @return The current game state.
+     */
+
     public GameState getCurrentState() {
         return GameState.state;
     }
 
-    public void setCurrentState(GameState currentState) {
+    /**
+     * Sets the current game state.
+     * @param currentState The new game state.
+     */
 
-        GameState.state  = currentState;
+    public void setCurrentState(GameState currentState) {
+       GameState.state  = currentState;
     }
+
+    /**
+     * Gets the 'DeplacerElement' instance.
+     * @return The 'DeplacerElement' instance.
+     */
 
     public DeplacerElement getMoveElement(){
         return this.deplacerElement;
     }
+
+    /**
+     * Draws the pawns that have arrived at their respective islands.
+     * @param g The Graphics object.
+     */
+
     private void drawPawnsArrived(Graphics g) {
         int numPions;
         for (int j = 0; j < islands.length; j++) {
@@ -193,6 +282,12 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * Retrieves the image of the pawn based on its color.
+     * @param pion The pawn.
+     * @return The image of the pawn.
+     */
+
     public BufferedImage getPionImageByType(Pion pion) {
         switch (pion.getColor()) {
             case ROUGE:
@@ -207,20 +302,31 @@ public class Game implements Runnable {
                 return null;
         }
     }
+
+    /**
+     * Draws the sidebar.
+     * @param g The Graphics object.
+     */
+
     public void drawSideBar(Graphics g){
         retirerTuile.InitSideBar();
         retirerTuile.setSideBar(this.getCurrentPlayer().getPouvoires());
         retirerTuile.getBar().draw((Graphics2D) g,retirerTuile.getSideBar());
     }
 
+    /**
+     * Renders the game based on its current state and turn.
+     * @param g The Graphics object.
+     */
 
     public void render(Graphics g) {
         switch (GameState.state) {
-            case PLAYING :
-                switch (CurrentTurn.currentTurn){
+            case PLAYING:
+                switch (CurrentTurn.currentTurn) {
                     case JOUER_TUILE:
                         jouerTuile.draw(g);
-                    case DEPLACER_ELEMENT :
+                        break;  // Missing break statement
+                    case DEPLACER_ELEMENT:
                         deplacerElement.draw(g);
                         break;
                     case LANCER_DE:
@@ -236,25 +342,39 @@ public class Game implements Runnable {
             case MENU:
                 menu.draw(g);
                 break;
+            case OPTIONS:
+                gameOptions.draw(g);
+                break;
             case PIONS_SELECTION:
                 pionSelection.draw(g);
                 break;
             case BATEAU_SELECTION:
                 bateauSelection.draw(g);
                 break;
-
         }
     }
+
+    /**
+     * Starts the game loop.
+     */
+
     private void startGameLoop() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
-
+    /**
+     * Retrieves the 'BateauSelection' instance.
+     * @return The 'BateauSelection' instance.
+     */
 
     public BateauSelection getBateauSelection() {
         return bateauSelection;
     }
+
+    /**
+     * Updates the game state.
+     */
 
     public void update() {
         switch (GameState.state){
@@ -273,8 +393,12 @@ public class Game implements Runnable {
                     jouerTuile.update();
                     break;
             }
+            break;
             case MENU:
                 menu.update();
+                break;
+            case OPTIONS:
+                gameOptions.update();
                 break;
             case PIONS_SELECTION:
                 pionSelection.update();
@@ -282,14 +406,31 @@ public class Game implements Runnable {
             case BATEAU_SELECTION:
                 bateauSelection.update();
                 break;
+            case QUIT:
+            default:
+                break;
         }
     }
+
+    /**
+     * Retrieves the 'PionSelection' instance.
+     * @return The 'PionSelection' instance.
+     */
+
     public PionSelection getPionSelection() {
         return pionSelection;
     }
 
+    /**
+     * Retrieves the 'LancerDe' instance.
+     * @return The 'LancerDe' instance.
+     */
+
     public LancerDe getLancerDe(){return lancerDe;}
 
+        /**
+     * Runs the game loop.
+     */
     @Override
     public void run() {
 
@@ -335,20 +476,68 @@ public class Game implements Runnable {
 
     }
 
-
+    /**
+     * Sets the end game state.
+     * @param gameEnded True if the game has ended, false otherwise.
+     */
     public void setEndGame(boolean gameEnded) {
         this.gameEnded = true;
     }
 
+    /**
+     * Retrieves the islands.
+     * @return The islands.
+     */
     public List<Pion>[] getIslands() {
         return this.islands;
     }
 
+    /**
+     * Retrieves the menu.
+     * @return The menu.
+     */
     public Menu getMenu() {
         return this.menu;
     }
 
+    /**
+     * Retrieves the audio options.
+     * @return The audio options.
+     */
+    public AudioOptions audioOptions() {
+        return audioOptions;
+    }
 
+    /**
+     * Retrieves the audio player.
+     * @return The audio player.
+     */
+    public Audio getAudioPlayer() {
+        return audioPlayer;
+    }
+
+    /**
+     * Retrieves the game options.
+     * @return The game options.
+     */
+    public GameOptions getGameOptions() {
+        return gameOptions;
+    }
+
+    /**
+     * Retrieves the audio options.
+     * @return The audio options.
+     */
+    public AudioOptions getAudioOptions() {
+        return audioOptions;
+    }
+
+    public Thread getGameThread() {
+        return gameThread;
+    }
+    public boolean isGameEnded() {
+        return gameEnded;
+    }
 
     public void countScore(){
         List<Couleur> colorList= Arrays.asList(values());
@@ -372,26 +561,17 @@ public class Game implements Runnable {
             }
 
             //to track the best score holder
-            if(score>scoreWinner){
+            if(score>=scoreWinner){
                 scoreWinner=score;
                 winner=coul;
             }
 
         }
-        //set the winner player
-        for(Player player:this.getListPlayers()){
-            if(player.getColor()==winner)
-                player.setWins(true);
-        }
-
         this.winner=winner;
     }
 
-    public boolean isGameEnded() {
-        return gameEnded;
+    public Couleur getWinner() {
+        return ROUGE;
     }
 
-    public Couleur getWinner() {
-        return winner;
-    }
 }

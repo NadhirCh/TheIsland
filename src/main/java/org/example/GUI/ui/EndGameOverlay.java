@@ -1,41 +1,28 @@
 package org.example.GUI.ui;
 
+import org.example.GUI.gamestates.Couleur;
 import org.example.GUI.gamestates.JouerTuile;
 import org.example.GUI.gamestates.RetirerTuile;
 import org.example.GUI.mainGame.Game;
-import org.example.GUI.mainGame.Hexagon;
 import org.example.Logic.Model.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 public class EndGameOverlay {
-    private JouerTuile jouerTuile;
-    private RetirerTuile retirerTuile;
+
     private BufferedImage BackGround;
 
-    private BufferedImage GreenShark;
-    private BufferedImage GreenWhale;
-    private BufferedImage GreenBoat;
-    private BufferedImage Tourbillon;
-    private BufferedImage Volcano;
 
-    private BufferedImage Daulphin;
-    private BufferedImage RedBoat;
-    private BufferedImage Serpent;
-    private BufferedImage RedShark;
-    private BufferedImage RedWhale;
-
-    private BufferedImage SharkDefens;
-    private BufferedImage WhaleDefens;
 
     private Game game;
+    private Couleur winner;
 
 
     public EndGameOverlay(Game game){
         this.game=game;
+        LoadImages();
     }
 
     public void LoadImages() {
@@ -60,7 +47,7 @@ public class EndGameOverlay {
         g.setColor(Color.black);
         drawCenteredString(g, gameOver, new Rectangle(Game.GAME_WIDTH/4, Game.GAME_HEIGHT/8, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /8));
 
-        switch(game.getWinner()){
+        switch(winner){
             case ROUGE ->{
                 g.setColor(Color.red);
                 colorWins="RED WINS";
@@ -84,7 +71,7 @@ public class EndGameOverlay {
         font = new Font("Arial", Font.BOLD, 22);
         int offsetY=Game.GAME_HEIGHT/8;
         String PlayeScore="";
-
+        int i = 0 ;
         for (Player player: game.getListPlayers()){
             switch (player.getColor()){
                 case ROUGE -> PlayeScore=" RED   ";
@@ -93,8 +80,9 @@ public class EndGameOverlay {
                 case JAUNE ->  PlayeScore=" YELLOW   ";
             }
             PlayeScore=PlayeScore+player.getScore();
-            drawCenteredString(g, PlayeScore, new Rectangle(Game.GAME_WIDTH/4, (Game.GAME_HEIGHT/4)+offsetY, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /8));
-
+            g.setColor(Color.BLACK);
+            drawCenteredString(g, PlayeScore, new Rectangle(Game.GAME_WIDTH/4 , (Game.GAME_HEIGHT/4)+(40*i)+offsetY, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /8));
+            i++;
         }
 
         g.dispose();
@@ -128,8 +116,7 @@ public class EndGameOverlay {
     public void update() {
     }
 
+    public void setWinner(Couleur winner) {
+        this.winner = winner;
     }
-
-
-
-
+}

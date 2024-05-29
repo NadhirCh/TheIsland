@@ -13,6 +13,11 @@ public class GamePanel extends JPanel {
     private MouseInputs mouseInputs;
 
     private Game game;
+
+    /**
+     * Constructor for GamePanel.
+     * @param game The game object.
+     */
     public GamePanel(Game game) {
         this.game = game;
         mouseInputs = new MouseInputs(this);
@@ -24,9 +29,9 @@ public class GamePanel extends JPanel {
         requestFocusInWindow();
     }
 
-
-
-
+    /**
+     * Sets the size of the panel.
+     */
     private void setPanelSize() {
         Dimension size = new Dimension(1200, 800);
         setMinimumSize(size);
@@ -34,15 +39,25 @@ public class GamePanel extends JPanel {
         setMaximumSize(size);
     }
 
-
-    public void updateGame()
-    {
-
+    /**
+     * Updates the game.
+     */
+    public void updateGame() {
+        // Placeholder for future implementation
     }
-    public Game getGame(){
+
+    /**
+     * Retrieves the game object.
+     * @return The game object.
+     */
+    public Game getGame() {
         return this.game;
     }
 
+    /**
+     * Overrides the paintComponent method to render the game.
+     * @param g The graphics object.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

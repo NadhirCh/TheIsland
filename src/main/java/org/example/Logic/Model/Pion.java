@@ -2,6 +2,9 @@ package org.example.Logic.Model;
 
 import org.example.GUI.gamestates.Couleur;
 
+/**
+ * Represents a pawn in the game.
+ */
 public class Pion {
     private Couleur couleur;
     private int points;
@@ -11,21 +14,44 @@ public class Pion {
     private boolean onIsland;
     private int canExist= -1;
     private int moveCounter ;
+
+     /**
+     * Initializes a new pawn with the specified color and points.
+     *
+     * @param couleur The color of the pawn.
+     * @param points  The points of the pawn.
+     */
     public Pion(Couleur couleur, int points) {
         this.couleur = couleur;
         this.points = points;
-        this.nageur = false; // Un pion n'est pas nageur par défaut
+        this.nageur = false; 
         this.onIsland = true;
         this.moveCounter = 0;
     }
+
+    /**
+     * Sets the ability of the pawn to exit the island.
+     *
+     * @param canExist The ability of the pawn to exit the island.
+     */
     public void setCanExit(int canExist){
         this.canExist=canExist;
     }
 
+     /**
+     * Gets the ability of the pawn to exit the island.
+     *
+     * @return The ability of the pawn to exit the island.
+     */
     public int canExit() {
         return canExist;
     }
 
+    /**
+     * Moves the pawn.
+     *
+     * @return True if the pawn is successfully moved; false otherwise.
+     */
     public boolean deplacer(){
         if(nageur && moveCounter == 1){
             return false;
@@ -37,13 +63,25 @@ public class Pion {
         return true;
     }
 
+     /**
+     * Checks if the pawn is on the island.
+     *
+     * @return True if the pawn is on the island; false otherwise.
+     */
     public boolean isOnIsland(){
         return onIsland;
     }
+
+    /**
+     * Sets the move counter of the pawn.
+     *
+     * @param counter The move counter to set.
+     */
     public void setMoveCounter(int counter){
         this.moveCounter = counter;
     }
 
+    // Getters And Setters
     public Couleur getColor() {
         return couleur;
     }
