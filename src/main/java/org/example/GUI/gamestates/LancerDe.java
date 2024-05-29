@@ -137,15 +137,15 @@ public class LancerDe extends State implements StateInterface {
         }
         drawDe(g);
         if (requinSelected != null) {
-            game.getAudioPlayer().playEffect(Audio.SHARK);
+            //game.getAudioPlayer().playEffect(Audio.SHARK);
             g.drawImage(requinImage, (int) xDelta, (int) yDelta, requinImage.getWidth()/2, requinImage.getHeight()/2, null);
         }
         else if (baleineSelected !=null){
-            game.getAudioPlayer().playEffect(Audio.WHALE);
+            //game.getAudioPlayer().playEffect(Audio.WHALE);
             g.drawImage(baleineImage, (int) xDelta, (int) yDelta, baleineImage.getWidth()/2, baleineImage.getHeight()/2, null);
         }
         else if(serpentSelected != null){
-            game.getAudioPlayer().playEffect(Audio.KRAKEN);
+            //game.getAudioPlayer().playEffect(Audio.KRAKEN);
             g.drawImage(serpentImage,(int) xDelta,(int) yDelta,serpentImage.getWidth()/2,serpentImage.getHeight()/2,null);
         }
 
