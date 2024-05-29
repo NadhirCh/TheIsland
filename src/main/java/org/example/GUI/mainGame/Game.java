@@ -571,7 +571,7 @@ public class Game implements Runnable {
     }
 
     public Couleur getWinner() {
-        return ROUGE;
+        return this.winner;
     }
 
 }

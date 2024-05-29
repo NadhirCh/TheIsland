@@ -343,46 +343,46 @@ public class JouerTuile extends State implements StateInterface{
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_0:
-                updateSideBar(0);
+                this.updateSideBar(0);
                 canDraw = true;
                 break;
             case KeyEvent.VK_1:
-                updateSideBar(1);
+                this.updateSideBar(1);
                 canDraw = true;
                 break;
             case KeyEvent.VK_2:
-                updateSideBar(2);
+                this.updateSideBar(2);
                 canDraw = true;
                 break;
             case KeyEvent.VK_3:
-                updateSideBar(3);
+                this.updateSideBar(3);
                 canDraw = true;
                 break;
             case KeyEvent.VK_4:
-                updateSideBar(4);
+                this.updateSideBar(4);
                 canDraw = true;
                 break;
             case KeyEvent.VK_5:
-                updateSideBar(5);
+                this.updateSideBar(5);
                 canDraw = true;
 
                 break;
             case KeyEvent.VK_6:
-                updateSideBar(6);
+                this.updateSideBar(6);
                 canDraw = true;
 
                 break;
             case KeyEvent.VK_7:
-                updateSideBar(7);
+                this.updateSideBar(7);
                 canDraw = true;
                 break;
             case KeyEvent.VK_8:
-                updateSideBar(8);
+                this.updateSideBar(8);
                 canDraw = true;
 
                 break;
             case KeyEvent.VK_9:
-                updateSideBar(9);
+                this.updateSideBar(9);
                 canDraw = true;
             case KeyEvent.VK_Q:
                 canDraw = false;

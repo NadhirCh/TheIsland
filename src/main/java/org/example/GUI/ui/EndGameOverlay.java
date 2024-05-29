@@ -37,15 +37,16 @@ public class EndGameOverlay {
 
     public void draw(Graphics g){
         if(BackGround!=null){
-            g.drawImage(BackGround, Game.GAME_WIDTH / 8, Game.GAME_HEIGHT / 8, Game.GAME_WIDTH*3 / 4, Game.GAME_HEIGHT*3 / 4, null);
+            g.drawImage(BackGround, Game.GAME_WIDTH / 4, Game.GAME_HEIGHT / 4, Game.GAME_WIDTH/2, Game.GAME_HEIGHT/2, null);
         }
         String gameOver="GAME OVER";
         String colorWins="";
+        int offsetY=Game.GAME_HEIGHT/32;
 
-        Font font = new Font("Arial", Font.BOLD, 25);
+        Font font = new Font("Arial", Font.BOLD, 30);
         g.setFont(font);
         g.setColor(Color.black);
-        drawCenteredString(g, gameOver, new Rectangle(Game.GAME_WIDTH/4, Game.GAME_HEIGHT/8, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /8));
+        drawCenteredString(g, gameOver, new Rectangle(Game.GAME_WIDTH/4, Game.GAME_HEIGHT*9/32, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /16));
 
         switch(winner){
             case ROUGE ->{
@@ -66,10 +67,10 @@ public class EndGameOverlay {
             }
         }
 
-        drawCenteredString(g, colorWins, new Rectangle(Game.GAME_WIDTH/4, Game.GAME_HEIGHT/4, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /8));
+        drawCenteredString(g, colorWins, new Rectangle(Game.GAME_WIDTH/4, (Game.GAME_HEIGHT*11/32), Game.GAME_WIDTH/2, Game.GAME_HEIGHT /16));
 
         font = new Font("Arial", Font.BOLD, 22);
-        int offsetY=Game.GAME_HEIGHT/8;
+
         String PlayeScore="";
         int i = 0 ;
         for (Player player: game.getListPlayers()){
@@ -81,7 +82,7 @@ public class EndGameOverlay {
             }
             PlayeScore=PlayeScore+player.getScore();
             g.setColor(Color.BLACK);
-            drawCenteredString(g, PlayeScore, new Rectangle(Game.GAME_WIDTH/4 , (Game.GAME_HEIGHT/4)+(40*i)+offsetY, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /8));
+            drawCenteredString(g, PlayeScore, new Rectangle(Game.GAME_WIDTH/4 , (Game.GAME_HEIGHT*7/16)+(Game.GAME_HEIGHT/16)*i, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /16));
             i++;
         }
 

@@ -100,17 +100,14 @@ public class TuileEffectOverlay {
             case GREENSHARK ->{
                 g.drawImage(GreenShark,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT*10/24 ,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Prenez un  requin mis de côté et placez sur la case de mer qu’occupait la tuile ";
-
             }
             case GREENWHALE -> {
                 g.drawImage(GreenWhale,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Prenez un  baleine mis de côté et placez-le sur la case de mer qu’occupait la tuile";
-
             }
             case GREENBOAT -> {
                 g.drawImage(GreenBoat,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Prenez un  bateau mis de côté et placez-le sur la case de mer qu’occupait la tuile";
-
             }
             case TOURBILLON -> {
                 g.drawImage(Tourbillon,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
@@ -127,32 +124,26 @@ public class TuileEffectOverlay {
             case DAULPHIN -> {
                 g.drawImage(Daulphin,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Un dauphin vient en aide à l’un de vos nageurs";
-
             }
             case REDBOAT -> {
                 g.drawImage(RedBoat,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Les vents vous sont favorables";
-
             }
             case SNAKE -> {
                 g.drawImage(Serpent,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Déplacez le serpent de mer de votre choix déjà présent sur le plateau de jeu sur n’importe quelle case de mer inoccupée";
-
             }
             case REDSHARK -> {
                 g.drawImage(RedShark,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Déplacez le requin de votre choix déjà présent sur le plateau de jeu sur n’importe quelle case de mer inoccupée";
-
             }
             case REDWHALE -> {
                 g.drawImage(RedWhale,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Déplacez la baleine de votre choix déjà présente sur le plateau de jeu sur n’importe quelle case de mer inoccupée";
-
             }
             case SHARKDEFENSE -> {
                 g.drawImage(SharkDefens,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
                 Tip="Quand un autre joueur déplace un requin dans une case occupée par l’un de vos nageurs, vous pouvez jouer cette tuile pour retirer le requin du jeu.";
-
             }
             case WHALEDEFENSE -> {
                 g.drawImage(WhaleDefens,Game.GAME_WIDTH *10/24, Game.GAME_HEIGHT *10/24,Game.GAME_WIDTH/6,Game.GAME_WIDTH/6,null);
