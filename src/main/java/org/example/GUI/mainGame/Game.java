@@ -16,6 +16,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.example.GUI.gamestates.Couleur.*;
@@ -57,6 +58,7 @@ public class Game implements Runnable {
     private boolean gameEnded;
     private Menu menu;
     private JouerTuile jouerTuile;
+    private Couleur winner;
 
 
      /**
@@ -529,4 +531,47 @@ public class Game implements Runnable {
     public AudioOptions getAudioOptions() {
         return audioOptions;
     }
+
+    public Thread getGameThread() {
+        return gameThread;
+    }
+    public boolean isGameEnded() {
+        return gameEnded;
+    }
+
+    public void countScore(){
+        List<Couleur> colorList= Arrays.asList(values());
+        int scoreWinner =0;
+        Couleur winner = null;
+
+        for(Couleur coul:colorList){
+            int score=0;
+            for(List<Pion> Island: islands){
+
+                for(Pion pion:Island){
+                    if (pion.getColor()==coul)
+                        score+=pion.getPoints();
+                }
+
+            }
+            //Update player's score
+            for(Player player:this.getListPlayers()){
+                if(player.getColor()==coul)
+                    player.setScore(score);
+            }
+
+            //to track the best score holder
+            if(score>=scoreWinner){
+                scoreWinner=score;
+                winner=coul;
+            }
+
+        }
+        this.winner=winner;
+    }
+
+    public Couleur getWinner() {
+        return ROUGE;
+    }
+
 }

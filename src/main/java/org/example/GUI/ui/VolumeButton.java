@@ -45,6 +45,7 @@ public class VolumeButton extends PauseButton {
          * The scaled width of the slider.
          */
         public static final int SLIDER_WIDTH = (int) (SLIDER_DEFAULT_WIDTH * 1.5f);
+
     
         private boolean mouseOver, mousePressed; // Tracks mouse interaction with the button
         private int buttonX, minX, maxX; // Positions and boundaries of the button
@@ -63,12 +64,14 @@ public class VolumeButton extends PauseButton {
          * @param width  The width of the button.
          * @param height The height of the button.
          */
+
         public VolumeButton(int xPos, int yPos, int width, int height) {
             super(xPos + width / 2, yPos, VOLUME_WIDTH, height); // Calls constructor of the superclass
             this.height = height;
             bounds.x -= VOLUME_WIDTH / 2;
             buttonX = xPos + width / 2;
             this.xPos = xPos;
+            this.yPos = yPos;
             this.width = width;
             minX = xPos + VOLUME_WIDTH / 2;
             maxX = xPos + width - VOLUME_WIDTH / 2;
@@ -104,8 +107,12 @@ public class VolumeButton extends PauseButton {
          * @param g The Graphics object for rendering.
          */
         public void draw(Graphics g) {
-            //g.drawImage(slider, xPos, yPos, width, height, null);
-            //g.drawImage(imgs[index], buttonX - VOLUME_WIDTH / 2, yPos, VOLUME_WIDTH, height, null);
+
+
+                g.drawImage(slider, xPos, yPos, width, height, null);
+                g.drawImage(imgs[index], buttonX - VOLUME_WIDTH / 2, yPos, VOLUME_WIDTH, height, null);
+
+
         }
     
         /**
@@ -114,14 +121,16 @@ public class VolumeButton extends PauseButton {
          * @param x The new x-coordinate.
          */
         public void changeX(int x) {
-            if (x < minX)
-                buttonX = minX;
-            else if (x > maxX)
-                buttonX = maxX;
-            else
-                buttonX = x;
-            updateFloatValue(); // Updates the float value of the volume based on the button position
-            bounds.x = buttonX - VOLUME_WIDTH / 2;
+
+                if (x < minX)
+                        buttonX = minX;
+                else if (x > maxX)
+                        buttonX = maxX;
+                else
+                        buttonX = x;
+                updateFloatValue();
+                bounds.x = buttonX - VOLUME_WIDTH / 2;
+
         }
     
         /**

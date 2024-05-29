@@ -25,11 +25,16 @@ public class Audio {
     public static final int DICE = 10;
     public static final int KRAKEN = 11;
 
-    private Clip[] songs, effects;
+    private Clip[] songs;
+    private Clip[] effects;
     private int currentSongID;
     private float effectsVolume = 0.75f;
     private float songVolume = effectsVolume * 0.85f;
-    private boolean songMute, effectMute = false;
+    private boolean songMute = false;
+    private boolean effectMute = false;
+    //private int viewIndex;
+    //private Random rand = new Random();
+
 
     /**
      * Constructs an Audio object, loads songs and effects, and starts playing the menu song.
@@ -96,6 +101,7 @@ public class Audio {
         updateEffectsVolume();
     }
 
+
     /**
      * Sets the current song to be played based on the view index.
      *
@@ -118,6 +124,7 @@ public class Audio {
      * @param effect the index of the effect to play
      */
     public void playEffect(int effect) {
+
         effects[effect].setMicrosecondPosition(0);
         effects[effect].start();
     }
@@ -203,4 +210,12 @@ public class Audio {
             gainControl.setValue(value);
         }
     }
+
+
+    public boolean getEffectMute(){
+        return effectMute;
+    }
+
+
+
 }

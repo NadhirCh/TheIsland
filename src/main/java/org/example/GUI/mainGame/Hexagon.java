@@ -6,6 +6,7 @@ import org.example.Logic.Model.*;
 import javax.imageio.ImageIO;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -208,9 +209,10 @@ public class Hexagon {
         {
             if(existsWhaleEffect()==null) {
                 if (bateau != null) {
-                    for (Pion pion : pions) {
-                        bateau.removeExplorer(pion);
+                    for (Iterator<Pion> iterator = bateau.getExplorers().iterator(); iterator.hasNext();) {
+                        Pion pion = iterator.next();
                         pions.add(pion);
+                        iterator.remove(); // Safely remove the element using the iterator
                         pion.setNageur(true);
                     }
                     this.bateau = null;

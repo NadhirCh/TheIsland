@@ -33,7 +33,7 @@ public class AudioOptions {
      */
     private void createVolumeButton() {
         int vX = (int) (309 * 1.5f);
-        int vY = (int) (15 * 1.5f);
+        int vY = (int) (325 * 1.5f);
         volumeButton = new VolumeButton(vX, vY, SLIDER_WIDTH, VOLUME_HEIGHT);
     }
 
@@ -54,7 +54,8 @@ public class AudioOptions {
     public void update() {
         musicButton.update();
         sfxButton.update();
-        // volumeButton.update();
+
+        volumeButton.update();
     }
 
     /**
@@ -65,7 +66,10 @@ public class AudioOptions {
     public void draw(Graphics g) {
         musicButton.draw(g);
         sfxButton.draw(g);
-        // volumeButton.draw(g);
+
+
+        volumeButton.draw(g);
+
     }
 
     /**
@@ -105,6 +109,8 @@ public class AudioOptions {
     public void mouseReleased(MouseEvent e) {
         if (isIn(e, musicButton)) {
             if (musicButton.isMousePressed()) {
+                if(!game.getAudioPlayer().getEffectMute())
+                    game.getAudioPlayer().playEffect(Audio.MENUCLICK);
                 musicButton.setMuted(!musicButton.isMuted());
                 game.getAudioPlayer().toggleSongMute();
             }

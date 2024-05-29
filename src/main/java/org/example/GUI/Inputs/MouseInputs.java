@@ -2,6 +2,7 @@ package org.example.GUI.Inputs;
 
 import org.example.GUI.gamestates.CurrentTurn;
 import org.example.GUI.gamestates.GameState;
+import org.example.GUI.mainGame.Game;
 import org.example.GUI.mainGame.GamePanel;
 
 import java.awt.event.MouseEvent;
@@ -32,7 +33,13 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
      */
     @Override
     public void mouseDragged(MouseEvent e) {
-        // No action needed for mouse dragging
+
+        switch (GameState.state){
+            case OPTIONS:
+                gamePanel.getGame().getGameOptions().mouseDragged(e);
+                break;
+
+        }
     }
 
     /**

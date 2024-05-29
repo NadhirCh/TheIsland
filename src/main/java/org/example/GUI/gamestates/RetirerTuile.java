@@ -429,7 +429,7 @@ public class RetirerTuile extends State implements StateInterface {
     public boolean isAdjacentToWater(Hexagon hex){
         List<Hexagon> adjacents = hex.getAdjacentHexagons(hexagons);
         for(Hexagon hexagon : adjacents){
-            if(hexagon.getType()== Hexagon.Type.NONE){
+            if(hexagon.getType()== Hexagon.Type.NONE && !(hexagon.getRow()==6 && hexagon.getCol()==5)){
                 return true;
             }
         }
