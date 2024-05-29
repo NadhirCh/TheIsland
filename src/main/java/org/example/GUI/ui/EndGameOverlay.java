@@ -81,7 +81,7 @@ public class EndGameOverlay {
             }
             PlayeScore=PlayeScore+player.getScore();
             g.setColor(Color.BLACK);
-            drawCenteredString(g, PlayeScore, new Rectangle(Game.GAME_WIDTH/4 , (Game.GAME_HEIGHT/4)+(20*i)+offsetY, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /8));
+            drawCenteredString(g, PlayeScore, new Rectangle(Game.GAME_WIDTH/4 , (Game.GAME_HEIGHT/4)+(40*i)+offsetY, Game.GAME_WIDTH/2, Game.GAME_HEIGHT /8));
             i++;
         }
 
