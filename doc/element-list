@@ -1,0 +1,6 @@
+org.example.GUI.animations
+org.example.GUI.gamestates
+org.example.GUI.Inputs
+org.example.GUI.mainGame
+org.example.GUI.ui
+org.example.Logic.Model

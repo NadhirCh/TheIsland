@@ -6,15 +6,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a matrix of {@link Tuile} objects used in the game.
+ */
 public class Matrice {
 
     public Tuile[][] matrix;
 
+    /**
+     * Constructs a Matrice of the specified size and initializes it.
+     *
+     * @param size the size of the matrix (size x size)
+     */
     public Matrice(int size) {
         matrix = new Tuile[size][size];
         initializeMatrix();
     }
 
+    /**
+     * Initializes the matrix with default {@link Tuile} objects and sets predefined positions
+     * with shuffled types and effects.
+     */
     private void initializeMatrix() {
         // Initialize matrix with default Tuile objects
         for (int i = 0; i < matrix.length; i++) {
@@ -117,11 +129,19 @@ public class Matrice {
         matrix[6][5].setType(4);
     }
 
-
+    /**
+     * Represents a position in the matrix with row and column indices.
+     */
     static class Position {
         int row;
         int col;
 
+        /**
+         * Constructs a Position with the specified row and column indices.
+         *
+         * @param row the row index
+         * @param col the column index
+         */
         public Position(int row, int col) {
             this.row = row;
             this.col = col;

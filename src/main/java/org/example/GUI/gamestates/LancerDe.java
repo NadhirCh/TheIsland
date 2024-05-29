@@ -21,6 +21,11 @@ import java.util.List;
 
 import static java.awt.geom.Point2D.distance;
 
+/**
+ * Represents the game state for rolling the dice.
+ * Handles dice rolling animation, updating hexagons, and turn progression.
+ */
+
 public class LancerDe extends State implements StateInterface {
     private  List<Pion>[] islands;
     private BufferedImage backgroundImage;
@@ -48,6 +53,12 @@ public class LancerDe extends State implements StateInterface {
     private BufferedImage requinImage;
     private BufferedImage serpentImage;
 
+
+    /**
+     * Constructs a new instance of LancerDe with the specified Game instance.
+     *
+     * @param game The Game instance associated with this state.
+     */
     public LancerDe(Game game) {
         super(game);
         initClasses();
@@ -55,14 +66,29 @@ public class LancerDe extends State implements StateInterface {
         initTimer();
         adjascentHexagons = new ArrayList<Hexagon>();
     }
+
+    /**
+     * Sets the islands list for this state.
+     *
+     * @param islands The list of islands.
+     */
     public void setIslands(List<Pion>[] islands){
         this.islands = islands;
     }
 
+    /**
+     * Sets the hexagons list for this state.
+     *
+     * @param hexagons The list of hexagons.
+     */
     public void setHexagons(List<Hexagon> hexagons) {
         this.hexagons = hexagons;
     }
 
+
+    /**
+     * Updates the game state, including hexagons and the turn progression.
+     */
     @Override
     public void update() {
         for (Hexagon hex : hexagons) {
@@ -89,9 +115,15 @@ public class LancerDe extends State implements StateInterface {
             }
         }
     }
+
+    /**
+    * Initializes the necessary classes.
+    */
     private void initClasses() {
     }
-
+    /**
+    * Loads the images required for the game state.
+    */
     private void loadImages() {
         try {
             backgroundImage = ImageIO.read(getClass().getResource("/the_island.png"));
@@ -117,6 +149,9 @@ public class LancerDe extends State implements StateInterface {
         }
     }
 
+    /**
+    * Initializes the timer for dice rolling animation.
+    */
     private void initTimer() {
         diceRollTimer = new Timer(100, new ActionListener() {
             @Override
@@ -133,6 +168,12 @@ public class LancerDe extends State implements StateInterface {
         });
     }
 
+
+    /**
+     * Draws the game state, including the background, hexagons, dice, and selected creatures.
+    *
+    * @param g the Graphics object for drawing
+    */
     @Override
     public void draw(Graphics g) {
         if (backgroundImage != null) {
@@ -159,10 +200,20 @@ public class LancerDe extends State implements StateInterface {
 
 
     }
-
+    /**
+    * Draws the current dice image on the screen.
+    *
+    * @param g The Graphics object used for drawing.
+    */
     public void drawDe(Graphics g) {
         g.drawImage(currentDiceImage, Game.GAME_WIDTH - 100, 100,80,80, null);
     }
+
+    /**
+    * Handles mouse click events.
+    *
+    * @param e The MouseEvent representing the mouse click.
+    */
     @Override
     public void mouseClicked(MouseEvent e) {
         int mouseX = e.getX();
@@ -189,10 +240,24 @@ public class LancerDe extends State implements StateInterface {
         }
     }
 
+    /**
+    * Checks if a point (mouse position) is inside a hexagon.
+    *
+    * @param mouseX The x-coordinate of the mouse position.
+    * @param mouseY The y-coordinate of the mouse position.
+    * @param hex    The hexagon to check against.
+    * @return True if the point is inside the hexagon, false otherwise.
+    */
     private boolean isPointInsideHexagon(int mouseX, int mouseY, Hexagon hex) {
         double dist = distance(mouseX, mouseY, hex.getX(), hex.getY());
         return dist < radius;
     }
+
+    /**
+    * Handles clicking on a monster (serpent, requin, or baleine) hexagon.
+    *
+    * @param hex The hexagon that was clicked.
+    */
     private void handleMonsterClick(Hexagon hex) {
         if (currentDiceImage == dePhaseSerpent) {
             game.getAudioPlayer().playEffect(Audio.KRAKEN);
@@ -206,6 +271,11 @@ public class LancerDe extends State implements StateInterface {
         }
     }
 
+    /**
+    * Handles clicking on a hexagon with a serpent.
+    *
+    * @param hex The hexagon containing the serpent.
+    */
     private void handleSerpentClick(Hexagon hex) {
         if (serpentSelected == null) {
             if (hex.getSerpent() != null) {
@@ -215,13 +285,20 @@ public class LancerDe extends State implements StateInterface {
             }
         } else {
             if(adjascentHexagons.contains(hex)) {
-                hex.setSerpent(serpentSelected);
-                resetTurnState();
-                game.nextTurn();
+                if(hex.getType()== Hexagon.Type.NONE) {
+                    hex.setSerpent(serpentSelected);
+                    resetTurnState();
+                    game.nextTurn();
+                }
             }
         }
     }
 
+    /**
+    * Handles clicking on a hexagon with a requin.
+    *
+    * @param hex The hexagon containing the requin.
+    */
     private void handleRequinClick(Hexagon hex) {
         if (requinSelected == null) {
             if (hex.getRequin() != null) {
@@ -231,13 +308,20 @@ public class LancerDe extends State implements StateInterface {
             }
         } else {
             if(adjascentHexagons.contains(hex)) {
-                hex.setRequin(requinSelected);
-                resetTurnState();
-                game.nextTurn();
+                if(hex.getType()== Hexagon.Type.NONE) {
+                    hex.setRequin(requinSelected);
+                    resetTurnState();
+                    game.nextTurn();
+                }
             }
         }
     }
 
+    /**
+    * Handles clicking on a hexagon with a baleine.
+    *
+    * @param hex The hexagon containing the baleine.
+    */
     private void handleBaleineClick(Hexagon hex) {
         if (baleineSelected == null) {
             if (hex.getBaleine() != null) {
@@ -247,21 +331,29 @@ public class LancerDe extends State implements StateInterface {
             }
         } else {
             if(adjascentHexagons.contains(hex)) {
-                hex.setBaleine(baleineSelected);
-                resetTurnState();
-                game.nextTurn();
+                if(hex.getType()== Hexagon.Type.NONE) {
+                    hex.setBaleine(baleineSelected);
+                    resetTurnState();
+                    game.nextTurn();
+                }
             }
         }
     }
 
 
-
+    /**
+    * Initiates the dice roll animation.
+    */
     private void startDiceRollAnimation() {
         diceRollDuration = 3000 + (int) (Math.random() * 2000);
         startTime = System.currentTimeMillis();
         //game.getAudioPlayer().playEffect(Audio.DICE);
         diceRollTimer.start();
     }
+
+    /**
+    * Resets the turn state after completing an action.
+    */
     private void resetTurnState() {
         serpentSelected = null;
         baleineSelected = null;
@@ -270,24 +362,50 @@ public class LancerDe extends State implements StateInterface {
         adjascentHexagons.clear();
         currentDiceImage = diceImages[0];
     }
-
+    /**
+    * Handles mouse pressed events.
+     *
+    * @param e The MouseEvent representing the mouse press.
+     */
 
     @Override
     public void mousePressed(MouseEvent e) {
     }
 
+    /**
+    * Handles mouse moved events.
+     *
+    * @param e The MouseEvent representing the mouse movement.
+    */
     public void mouseMoved(MouseEvent e) {
         this.setRectPos(e.getX(), e.getY());
     }
 
+    /**
+    * Handles mouse released events.
+    *
+    * @param e The MouseEvent representing the mouse release.
+    */
     @Override
     public void mouseReleased(MouseEvent e) {
     }
 
+    /**
+    * Sets the position of the rectangle.
+    *
+    * @param x The x-coordinate of the position.
+    * @param y The y-coordinate of the position.
+    */
     public void setRectPos(int x, int y) {
         this.xDelta = x;
         this.yDelta = y;
     }
+
+    /**
+    * Handles key pressed events.
+     *
+    * @param e The KeyEvent representing the key press.
+    */
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER && !deLancee) {
             game.getAudioPlayer().playEffect(Audio.DICE);
@@ -295,7 +413,11 @@ public class LancerDe extends State implements StateInterface {
         }
     }
 
-
+    /**
+     * Retrieves the list of hexagons.
+    *
+    * @return The list of hexagons.
+    */
     public List<Hexagon> getHexagons() {
     return this.hexagons;
     }

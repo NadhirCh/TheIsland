@@ -5,16 +5,30 @@ import org.example.GUI.gamestates.Couleur;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * La classe Bateau représente un bateau dans le modèle de jeu.
+ * 
+ * Un bateau peut transporter jusqu'à trois explorateurs de différentes couleurs.
+ */
 public class Bateau {
 
     private List<Pion> explorers;
     private List<Player> controlleursBateau;
 
+    /**
+     * Initialise un nouveau bateau sans explorateurs.
+     */
     public Bateau(){
         this.explorers = new ArrayList<>();
 
     }
 
+     /**
+     * Ajoute un explorateur au bateau si celui-ci n'est pas plein.
+     * 
+     * @param pion L'explorateur à ajouter.
+     * @return Vrai si l'ajout est réussi, sinon faux.
+     */
     public boolean addExplorer(Pion pion){
         if(explorers.size() < 3){
             explorers.add(pion);
@@ -23,24 +37,39 @@ public class Bateau {
         return false;
     }
 
-    public List<Pion> getExplorers() {
-        return explorers;
-    }
 
+    /**
+     * Retire un explorateur du bateau.
+     * 
+     * @param pion L'explorateur à retirer.
+     */
     public void removeExplorer(Pion pion){
         explorers.remove(pion);
     }
 
+    /**
+     * Vérifie si le bateau est plein (contient 3 explorateurs).
+     * 
+     * @return Vrai si le bateau est plein, sinon faux.
+     */
     public boolean isFull(){
         return explorers.size() == 3;
     }
 
+    /**
+     * Vérifie si le bateau est vide (ne contient aucun explorateur).
+     * 
+     * @return Vrai si le bateau est vide, sinon faux.
+     */
     public boolean isEmpty(){
         return explorers.isEmpty();
     }
 
-
-    // Cette fonction permet de retourner la couleur du joueur qui controlle le bateau
+    /**
+     * Retourne les couleurs des joueurs contrôlant le bateau.
+     * 
+     * @return Liste des couleurs des joueurs contrôlant le bateau.
+     */
     public List<Couleur> getControlleurBateau() {
         List<Couleur> controlleurs = new ArrayList<>();
         int redPawnsCounter = 0;
@@ -83,6 +112,11 @@ public class Bateau {
         }
 
         return controlleurs;
+    }
+    
+    //getters
+    public List<Pion> getExplorers() {
+        return explorers;
     }
 
     public int getCount(Couleur couleur) {
